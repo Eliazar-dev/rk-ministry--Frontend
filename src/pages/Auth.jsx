@@ -157,25 +157,31 @@ export default function Auth() {
 
             {/* SIGN UP */}
             <form className="face back" onSubmit={onSignup} style={{ visibility: flip ? 'visible' : 'hidden', transition: 'visibility 0s .4s' }}>
-              <h2>JOIN THE FAMILY</h2>
-              <p className="sub">Create your account — we will email you a code</p>
-              {err && flip && <div className="glass-err">{err}</div>}
-              <div className="g-field">
-                <User size={20} />
-                <input required placeholder="Full name" autoComplete="name" value={sf.name} onChange={(e) => setSf({ ...sf, name: e.target.value })} />
+              <div className="auth-columns">
+                <div className="auth-left">
+                  <h2>JOIN THE FAMILY</h2>
+                </div>
+                <div className="auth-right">
+                  <p className="sub">Create your account — we will email you a code</p>
+                  {err && flip && <div className="glass-err">{err}</div>}
+                  <div className="g-field">
+                    <User size={20} />
+                    <input required placeholder="Full name" autoComplete="name" value={sf.name} onChange={(e) => setSf({ ...sf, name: e.target.value })} />
+                  </div>
+                  <div className="g-field">
+                    <Mail size={20} />
+                    <input type="email" required placeholder="Email ID" autoComplete="email" value={sf.email} onChange={(e) => setSf({ ...sf, email: e.target.value })} />
+                  </div>
+                  <div className="g-field">
+                    <Lock size={20} />
+                    <input type={pwType} required placeholder="Password" autoComplete="new-password" value={sf.password} onChange={(e) => setSf({ ...sf, password: e.target.value })} />
+                    <button type="button" className="eye" onClick={() => setShow(!show)} aria-label="Toggle password"><Eye_ size={18} /></button>
+                  </div>
+                  <button className="g-btn" disabled={busy}>{busy && flip ? 'SENDING CODE…' : 'SIGN UP'}</button>
+                  {googleBlock}
+                  <div className="switch">Already a member?<button type="button" onClick={toggle}>Login</button></div>
+                </div>
               </div>
-              <div className="g-field">
-                <Mail size={20} />
-                <input type="email" required placeholder="Email ID" autoComplete="email" value={sf.email} onChange={(e) => setSf({ ...sf, email: e.target.value })} />
-              </div>
-              <div className="g-field">
-                <Lock size={20} />
-                <input type={pwType} required placeholder="Password" autoComplete="new-password" value={sf.password} onChange={(e) => setSf({ ...sf, password: e.target.value })} />
-                <button type="button" className="eye" onClick={() => setShow(!show)} aria-label="Toggle password"><Eye_ size={18} /></button>
-              </div>
-              <button className="g-btn" disabled={busy}>{busy && flip ? 'SENDING CODE…' : 'SIGN UP'}</button>
-              {googleBlock}
-              <div className="switch">Already a member?<button type="button" onClick={toggle}>Login</button></div>
             </form>
           </div>
         )}
