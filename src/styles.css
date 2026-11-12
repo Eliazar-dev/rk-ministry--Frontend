@@ -395,6 +395,7 @@ button.card { text-align: left; width: 100%; }
   grid-area: 1 / 1;
   box-sizing: border-box;
   min-width: 0;
+  display: block;
 }
 
 .face.back {
@@ -422,6 +423,7 @@ button.card { text-align: left; width: 100%; }
   font-size: 1.4rem;
   letter-spacing: .06em;
   word-break: break-word;
+  display: block;
 }
 
 .face .sub {
@@ -431,6 +433,7 @@ button.card { text-align: left; width: 100%; }
   margin-bottom: 26px;
   line-height: 1.4;
   word-break: break-word;
+  display: block;
 }
 
 .g-field {
@@ -469,6 +472,7 @@ button.card { text-align: left; width: 100%; }
   letter-spacing: .04em;
   min-width: 0;
   width: 100%;
+  display: block;
 }
 
 .g-field input::placeholder {
