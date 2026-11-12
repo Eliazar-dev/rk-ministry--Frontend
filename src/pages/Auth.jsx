@@ -173,7 +173,7 @@ export default function Auth() {
                 <input type={pwType} required placeholder="Password" autoComplete="new-password" value={sf.password} onChange={(e) => setSf({ ...sf, password: e.target.value })} />
                 <button type="button" className="eye" onClick={() => setShow(!show)} aria-label="Toggle password"><Eye_ size={18} /></button>
               </div>
-              <button className="g-btn" style={{ marginTop: 6 }} disabled={busy}>{busy && flip ? 'SENDING CODE…' : 'SIGN UP'}</button>
+              <button className="g-btn" disabled={busy}>{busy && flip ? 'SENDING CODE…' : 'SIGN UP'}</button>
               {googleBlock}
               <div className="switch">Already a member?<button type="button" onClick={toggle}>Login</button></div>
             </form>

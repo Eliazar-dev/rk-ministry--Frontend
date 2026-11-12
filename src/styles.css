@@ -280,14 +280,14 @@ button.card { text-align: left; width: 100%; }
 .blob.b2 { width: 380px; height: 380px; background: #d4af37; bottom: -120px; right: -100px; animation-delay: -6s; opacity: .4; }
 .blob.b3 { width: 240px; height: 240px; background: #3a6fe0; bottom: 20%; left: 10%; animation-delay: -3s; opacity: .35; }
 @keyframes float { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(40px, -30px); } }
-.auth-wrap { position: relative; z-index: 2; width: 100%; max-width: 460px; perspective: 1400px; }
+.auth-wrap { position: relative; z-index: 2; width: 100%; max-width: 500px; perspective: 1400px; }
 .auth-brand { text-align: center; margin-bottom: 24px; display: grid; justify-items: center; gap: 10px; }
 .auth-brand .logo-badge { width: 74px; height: 74px; border-radius: 22px; flex-shrink: 0; }
 .auth-brand h1 { font-family: var(--font-display); color: #fff; font-size: 1.5rem; line-height: 1.2; word-break: break-word; margin: 0; }
 .auth-brand p { color: var(--gold-300); font-size: .8rem; letter-spacing: .18em; text-transform: uppercase; margin: 0; }
 .flipper { position: relative; transition: transform .6s cubic-bezier(.3, 1, .4, 1); transform-style: preserve-3d; width: 100%; }
 .flipper.flip { transform: rotateY(180deg); }
-.face { backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 30px; padding: 40px 32px; background: linear-gradient(145deg, rgba(255, 255, 255, .17), rgba(255, 255, 255, .05)); border: 1px solid rgba(255, 255, 255, .28); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); box-shadow: 0 30px 70px rgba(0, 0, 0, .45), inset 0 1px 0 rgba(255, 255, 255, .35); color: #fff; width: 100%; overflow: hidden; box-sizing: border-box; min-width: 0; }
+.face { backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 30px; padding: 40px 36px; background: linear-gradient(145deg, rgba(255, 255, 255, .17), rgba(255, 255, 255, .05)); border: 1px solid rgba(255, 255, 255, .28); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); box-shadow: 0 30px 70px rgba(0, 0, 0, .45), inset 0 1px 0 rgba(255, 255, 255, .35); color: #fff; width: 100%; overflow: hidden; box-sizing: border-box; min-width: 0; }
 /* Both faces share one grid cell so the card is always as tall as the taller face */
 .flipper { display: grid; }
 .face { grid-area: 1 / 1; min-width: 0; }
@@ -297,8 +297,8 @@ button.card { text-align: left; width: 100%; }
 .auth-back { display: inline-block; margin-bottom: 12px; color: #dbe3f8; font-size: .85rem; }
 .auth-back:hover { color: var(--gold-400); }
 
-.face h2 { text-align: center; margin-bottom: 6px; font-size: 1.35rem; letter-spacing: .06em; word-break: break-word; }
-.face .sub { text-align: center; color: #cdd8f5; font-size: .88rem; margin-bottom: 24px; line-height: 1.4; word-break: break-word; }
+.face h2 { text-align: center; margin-bottom: 8px; font-size: 1.4rem; letter-spacing: .06em; word-break: break-word; }
+.face .sub { text-align: center; color: #cdd8f5; font-size: .9rem; margin-bottom: 26px; line-height: 1.4; word-break: break-word; }
 
 .g-field { position: relative; display: flex; align-items: center; gap: 12px; border-bottom: 1.5px solid rgba(255, 255, 255, .55); margin-bottom: 20px; padding: 10px 4px; transition: border-color .25s; box-sizing: border-box; width: 100%; }
 .g-field:focus-within { border-color: var(--gold-400); }
@@ -312,7 +312,7 @@ button.card { text-align: left; width: 100%; }
 .g-row input { accent-color: var(--gold-500); width: 16px; height: 16px; flex-shrink: 0; }
 .g-row a { font-style: italic; opacity: .85; white-space: nowrap; }
 
-.g-btn { width: 100%; padding: 14px; border-radius: 18px; font-weight: 700; letter-spacing: .24em; font-size: .88rem; color: var(--navy-950); background: var(--grad-gold); box-shadow: 0 10px 28px rgba(212, 175, 55, .4); transition: transform .2s, box-shadow .2s; margin-bottom: 12px; cursor: pointer; box-sizing: border-box; }
+.g-btn { width: 100%; padding: 14px; border-radius: 18px; font-weight: 700; letter-spacing: .24em; font-size: .88rem; color: var(--navy-950); background: var(--grad-gold); box-shadow: 0 10px 28px rgba(212, 175, 55, .4); transition: transform .2s, box-shadow .2s; margin-top: 8px; margin-bottom: 12px; cursor: pointer; box-sizing: border-box; }
 .g-btn:hover { transform: translateY(-2px); box-shadow: 0 14px 34px rgba(212, 175, 55, .6); }
 .g-btn:disabled { opacity: .65; cursor: not-allowed; }
 
