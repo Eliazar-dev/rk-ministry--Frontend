@@ -285,7 +285,7 @@ button.card { text-align: left; width: 100%; }
 .auth-brand .logo-badge { width: 74px; height: 74px; border-radius: 22px; }
 .auth-brand h1 { font-family: var(--font-display); color: #fff; font-size: 1.5rem; }
 .auth-brand p { color: var(--gold-300); font-size: .8rem; letter-spacing: .18em; text-transform: uppercase; }
-.flipper { position: relative; transition: transform .8s cubic-bezier(.3, 1, .4, 1); transform-style: preserve-3d; }
+.flipper { position: relative; transition: transform .6s cubic-bezier(.3, 1, .4, 1); transform-style: preserve-3d; }
 .flipper.flip { transform: rotateY(180deg); }
 .face { backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 30px; padding: 34px 30px; background: linear-gradient(145deg, rgba(255, 255, 255, .17), rgba(255, 255, 255, .05)); border: 1px solid rgba(255, 255, 255, .28); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); box-shadow: 0 30px 70px rgba(0, 0, 0, .45), inset 0 1px 0 rgba(255, 255, 255, .35); color: #fff; }
 /* Both faces share one grid cell so the card is always as tall as the taller face */
