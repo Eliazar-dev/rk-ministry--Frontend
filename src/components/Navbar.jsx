@@ -43,6 +43,7 @@ export default function Navbar({ overlay = false }) {
   }, [open]);
 
   const initial = (user?.name || 'U').charAt(0).toUpperCase();
+  const profilePic = user?.profile_picture;
 
   return (
     <>
@@ -80,7 +81,11 @@ export default function Navbar({ overlay = false }) {
             )}
             {user ? (
               <button className="icon-btn" onClick={() => navigate('/profile')} aria-label="Profile" title="Profile">
-                <User size={19} />
+                {profilePic ? (
+                  <img src={profilePic} alt={user.name} style={{ width: 24, height: 24, borderRadius: '50%', objectFit: 'cover' }} />
+                ) : (
+                  <User size={19} />
+                )}
               </button>
             ) : (
               <Link to="/auth" state={{ from: pathname }} className="btn btn-gold btn-sm signin-btn">

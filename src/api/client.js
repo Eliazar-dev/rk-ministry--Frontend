@@ -40,7 +40,9 @@ function load(key, resource) {
 
 function useResource(resource, empty) {
   const { user } = useAuth();
-  const key = `${resource}|${Boolean(user)}`;
+  // Don't cache by auth state for public resources like hero, gallery, etc.
+  const isPublic = ['hero', 'gallery', 'about'].includes(resource);
+  const key = isPublic ? resource : `${resource}|${Boolean(user)}`;
   const [state, setState] = useState(() => (cache.has(key) ? { data: cache.get(key), loading: false } : { data: empty, loading: true }));
 
   useEffect(() => {
