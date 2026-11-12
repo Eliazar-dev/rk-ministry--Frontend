@@ -280,7 +280,7 @@ button.card { text-align: left; width: 100%; }
 .blob.b2 { width: 380px; height: 380px; background: #d4af37; bottom: -120px; right: -100px; animation-delay: -6s; opacity: .4; }
 .blob.b3 { width: 240px; height: 240px; background: #3a6fe0; bottom: 20%; left: 10%; animation-delay: -3s; opacity: .35; }
 @keyframes float { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(40px, -30px); } }
-.auth-wrap { position: relative; z-index: 2; width: min(420px, 100%); perspective: 1400px; }
+.auth-wrap { position: relative; z-index: 2; width: 100%; max-width: 420px; perspective: 1400px; }
 .auth-brand { text-align: center; margin-bottom: 18px; display: grid; justify-items: center; gap: 8px; }
 .auth-brand .logo-badge { width: 74px; height: 74px; border-radius: 22px; }
 .auth-brand h1 { font-family: var(--font-display); color: #fff; font-size: 1.5rem; }
@@ -293,6 +293,19 @@ button.card { text-align: left; width: 100%; }
 .face { grid-area: 1 / 1; }
 .face.back { transform: rotateY(180deg); }
 .face.otp-card { animation: rise .5s both; }
+
+/* Mobile auth fixes */
+@media (max-width: 480px) {
+  .auth-page { padding: 16px 12px; }
+  .auth-wrap { width: 100%; }
+  .auth-brand .logo-badge { width: 60px; height: 60px; }
+  .auth-brand h1 { font-size: 1.25rem; }
+  .face { padding: 24px 20px; border-radius: 24px; }
+  .face h2 { font-size: 1.15rem; }
+  .face .sub { font-size: .76rem; margin-bottom: 18px; }
+  .g-field { margin-bottom: 18px; }
+  .g-btn { padding: 12px; font-size: .82rem; }
+}
 
 .or { display: flex; align-items: center; gap: 12px; color: #cdd8f5; font-size: .7rem; letter-spacing: .22em; margin: 16px 0 14px; }
 .or::before, .or::after { content: ''; flex: 1; height: 1px; background: rgba(255, 255, 255, .3); }
