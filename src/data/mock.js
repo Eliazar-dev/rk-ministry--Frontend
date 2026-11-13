@@ -6,13 +6,13 @@ const img = (seed) => `https://picsum.photos/seed/${seed}/800/500`;
 export const heroSlides = [
   {
     id: 1,
-    video: 'https://res.cloudinary.com/dtoxfbfr/video/upload/v1794340688/YTSave.to_YouTube_Media_OwtCx7vlQpQ_HOPE-TO-THE-HOPELESS-Pr-Kwanya-Richard-Snr-HPM-MEDIA-OFFICIAL-VIDEO-4K-VIDEO_003_360p_online-video-cutter.com.mp4',
-    poster: '',
+    video: '',
+    poster: img('hero1'),
   },
   {
     id: 2,
-    video: 'https://res.cloudinary.com/dtoxfbfr/video/upload/v1794337983/YTSave.to_YouTube_Media_LWpGMD1tmkk_THE-BOOK-OF-JOHN-Pr-Kwanya-Richard-Snr-HPM-MEDIA-4K-OFFICIAL-VIDEO_001_1080p_online-video-cutter.com.mp4',
-    poster: '',
+    video: '',
+    poster: img('hero2'),
   },
 ];
 
