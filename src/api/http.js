@@ -92,7 +92,13 @@ export async function http(path, { method = 'GET', body, signal } = {}) {
     /* empty body */
   }
   if (!res.ok) {
-    const fallback = res.status === 401 ? 'Please sign in to continue.' : 'Something went wrong. Please try again.';
+    let fallback = 'Something went wrong. Please try again.';
+    if (res.status === 401) {
+      fallback = 'Please sign in to continue.';
+      window.dispatchEvent(new Event('rk-logout'));
+    } else if (res.status === 403) {
+      fallback = 'Staff only. This area is restricted to administrators.';
+    }
     throw new ApiError(messageFrom(data) || fallback, res.status, data);
   }
   return data;
