@@ -38,7 +38,33 @@ export function LessonCard({ item, onWatch }) {
   const { user } = useAuth();
   const { guard } = useGate();
   const download = () =>
-    guard({ type: 'pdf', id: item.id }, () => window.open(item.pdf, '_blank', 'noopener,noreferrer'));
+    guard({ type: 'pdf', id: item.id }, () => {
+      // Force download: for Cloudinary links insert fl_attachment, for others fetch as blob
+      if (item.pdf.includes('cloudinary.com')) {
+        const url = new URL(item.pdf);
+        const parts = url.pathname.split('/upload/');
+        if (parts.length === 2) {
+          url.pathname = `${parts[0]}/upload/fl_attachment/${parts[1]}`;
+          window.open(url.toString(), '_blank', 'noopener,noreferrer');
+        } else {
+          window.open(item.pdf, '_blank', 'noopener,noreferrer');
+        }
+      } else {
+        // Fetch as blob and trigger download
+        fetch(item.pdf)
+          .then(res => res.blob())
+          .then(blob => {
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = item.pdf.split('/').pop() || 'lesson.pdf';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(a.href);
+          })
+          .catch(() => window.open(item.pdf, '_blank', 'noopener,noreferrer'));
+      }
+    });
   return (
     <div className="card">
       <div className="card-media">
