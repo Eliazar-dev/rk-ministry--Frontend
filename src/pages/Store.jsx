@@ -1,10 +1,13 @@
 import { useList } from '../api/client';
 import { SkeletonGrid } from '../components/Skeleton';
 import { ProductCard } from '../components/Cards';
-import usePageTitle from '../hooks/usePageTitle';
+import { useSEO } from '../hooks/useSEO';
 
 export default function Store() {
-  usePageTitle('Store', 'Bibles, books and branded gear from Richard Kwanya Snr Ministry.');
+  useSEO({
+    title: 'Store | Richard Kwanya Snr Ministry',
+    description: 'Bibles, books and branded gear from Richard Kwanya Snr Ministry. Every purchase supports the work of the gospel.',
+  });
   const { data, loading } = useList('products');
   return (
     <>

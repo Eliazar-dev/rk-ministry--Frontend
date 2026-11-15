@@ -4,10 +4,15 @@ import { useAuth } from '../context/AuthContext';
 import { useGate } from '../context/GateContext';
 import { money } from '../api/client';
 import { hasApi, http, waitForPayment } from '../api/http';
+import { useSEO } from '../hooks/useSEO';
 
 const PRESETS = [500, 1000, 2500, 5000, 10000, 20000];
 
 export default function Donate() {
+  useSEO({
+    title: 'Donate | Richard Kwanya Snr Ministry',
+    description: 'Support Richard Kwanya Snr Ministry — your donation helps us continue the work of equipping people and transforming lives.',
+  });
   const { user } = useAuth();
   const { guard } = useGate();
   const [amount, setAmount] = useState(1000);

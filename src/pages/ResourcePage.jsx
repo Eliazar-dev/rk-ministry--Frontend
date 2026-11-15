@@ -7,7 +7,7 @@ import { SkeletonGrid } from '../components/Skeleton';
 import { AlbumCard, ArticleCard, LessonCard, VideoCard } from '../components/Cards';
 import VideoModal from '../components/VideoModal';
 import { useResume } from '../context/GateContext';
-import usePageTitle from '../hooks/usePageTitle';
+import { useSEO } from '../hooks/useSEO';
 
 export default function ResourcePage() {
   const { slug } = useParams();
@@ -17,7 +17,10 @@ export default function ResourcePage() {
 }
 
 function Inner({ slug, cfg }) {
-  usePageTitle(cfg.title, cfg.sub);
+  useSEO({
+    title: `${cfg.title} | Richard Kwanya Snr Ministry`,
+    description: cfg.sub,
+  });
   const { data, loading } = useList(cfg.resource);
   const [q, setQ] = useState('');
   const [cat, setCat] = useState('All');

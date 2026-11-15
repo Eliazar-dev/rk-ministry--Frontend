@@ -10,7 +10,7 @@ import PrayerForm from '../components/PrayerForm';
 import { useList } from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import { useResume } from '../context/GateContext';
-import usePageTitle from '../hooks/usePageTitle';
+import { useSEO } from '../hooks/useSEO';
 
 const PILLARS = [
   [BookOpen, 'The Word', 'Sermons, Sabbath School lessons and devotionals that ground you in Scripture.'],
@@ -19,7 +19,10 @@ const PILLARS = [
 ];
 
 export default function Home() {
-  usePageTitle('', 'Richard Kwanya Snr Ministry — sermons, Sabbath School lessons, devotionals, mission gallery and store. Equipping people, transforming lives.');
+  useSEO({
+    title: 'Richard Kwanya Snr Ministry | #Babawa',
+    description: 'Richard Kwanya Snr Ministry — sermons, Sabbath School lessons, devotionals, mission gallery and store. Equipping people, transforming lives.',
+  });
   const { user } = useAuth();
   const sermons = useList('sermons');
   const lessons = useList('lessons');

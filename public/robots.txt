@@ -1,4 +1,8 @@
 User-agent: *
 Allow: /
 Disallow: /manage
+Disallow: /profile
+Disallow: /cart
 Disallow: /auth
+
+Sitemap: https://www.richardkwanyasnr.org/sitemap.xml

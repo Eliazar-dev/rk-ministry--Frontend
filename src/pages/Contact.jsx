@@ -1,12 +1,15 @@
 import { useState } from 'react';
 import { Mail, MapPin, Navigation, Phone } from 'lucide-react';
 import { EMAIL, MAP_DIRECTIONS, MAP_EMBED, MAP_OPEN, MAP_QUERY, PHONE } from '../config';
-import usePageTitle from '../hooks/usePageTitle';
+import { useSEO } from '../hooks/useSEO';
 import { useAuth } from '../context/AuthContext';
 import { hasApi, http } from '../api/http';
 
 export default function Contact() {
-  usePageTitle('Contact', 'Contact Richard Kwanya Snr Ministry — send a message or find us on the map.');
+  useSEO({
+    title: 'Contact | Richard Kwanya Snr Ministry',
+    description: 'Contact Richard Kwanya Snr Ministry — send a message or find us on the map.',
+  });
   const { user } = useAuth();
   const [form, setForm] = useState({ name: user?.name || '', email: user?.email || '', message: '', website: '' });
   const [sent, setSent] = useState(false);

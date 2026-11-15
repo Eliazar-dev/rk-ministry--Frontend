@@ -1,10 +1,13 @@
 import { Eye, Quote, Target } from 'lucide-react';
 import { useOne } from '../api/client';
 import { LogoImg } from '../components/Logo';
-import usePageTitle from '../hooks/usePageTitle';
+import { useSEO } from '../hooks/useSEO';
 
 export default function About() {
-  usePageTitle('About', 'About Richard Kwanya Snr Ministry: the pastor, our mission and our vision.');
+  useSEO({
+    title: 'About | Richard Kwanya Snr Ministry',
+    description: 'About Richard Kwanya Snr Ministry: the pastor, our mission and our vision.',
+  });
   const { data: p, loading } = useOne('about');
   const paras = (p.biography || '').split(/\n\s*\n/).map((x) => x.trim()).filter(Boolean);
   const empty = !loading && !p.biography && !p.intro;
