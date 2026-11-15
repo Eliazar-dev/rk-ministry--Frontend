@@ -52,13 +52,31 @@ export default function About() {
           <article className="vm" id="mission">
             <Target size={34} color="#b8912a" />
             <h3>Our Mission</h3>
-            <p>To spread the gospel of Jesus Christ through preaching, teaching, literature, health ministry and community service — equipping every believer to share their faith.</p>
+            <p>To advance holistic human development by integrating biblical truth, counselling, mentorship, health education, leadership development, and digital ministry, empowering individuals physically, spiritually, mentally, and socially for meaningful living and faithful service.</p>
           </article>
           <article className="vm" id="vision">
             <Eye size={34} color="#b8912a" />
             <h3>Our Vision</h3>
-            <p>A world where people are equipped, communities are transformed, and lives are anchored in the hope of Christ&apos;s soon return.</p>
+            <p>To cultivate a Christ-centered, inclusive, and transformative community where individuals of all ages and abilities experience holistic growth, discover their God-given purpose, and positively impact the world around them.</p>
           </article>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="container">
+          <div className="sec-head"><h2>Motto / Tagline</h2></div>
+          <p style={{ fontSize: '1.25rem', fontWeight: 600, color: '#d4af37', textAlign: 'center', marginTop: 20 }}>
+            Nurturing Hearts, Developing Minds, Transforming Lives
+          </p>
+        </div>
+      </section>
+
+      <section className="section alt">
+        <div className="container">
+          <div className="sec-head"><h2>Core Values</h2></div>
+          <p style={{ fontSize: '1.1rem', lineHeight: 1.8, textAlign: 'center', maxWidth: 800, margin: '0 auto' }}>
+            Helping people discover purpose, experience holistic transformation, and live lives of meaningful impact through Christ.
+          </p>
         </div>
       </section>
     </>
