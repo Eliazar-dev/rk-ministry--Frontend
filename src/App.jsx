@@ -14,6 +14,7 @@ import Donate from './pages/Donate';
 import Contact from './pages/Contact';
 import Profile from './pages/Profile';
 import About from './pages/About';
+import AdminLogin from './pages/AdminLogin';
 
 // The admin panel is its own chunk, so visitors never download it
 const AdminApp = lazy(() => import('./admin/AdminApp'));
@@ -30,6 +31,7 @@ export default function App() {
   return (
     <Routes>
       <Route path="/auth" element={<Auth />} />
+      <Route path="/admin/login" element={<AdminLogin />} />
       <Route path="/forgot-password" element={<Recover mode="forgot" />} />
       <Route path="/reset-password" element={<Recover mode="reset" />} />
       <Route

@@ -847,6 +847,89 @@ button.card { text-align: left; width: 100%; }
 .face h2 { text-align: center; margin-bottom: 4px; font-size: 1.35rem; letter-spacing: .06em; }
 .face .sub { text-align: center; color: #cdd8f5; font-size: .84rem; margin-bottom: 22px; }
 .g-field { position: relative; display: flex; align-items: center; gap: 12px; border-bottom: 1.5px solid rgba(255, 255, 255, .55); margin-bottom: 22px; padding: 6px 2px; transition: border-color .25s; }
+
+/* Admin Login Page */
+.admin-login-page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, var(--navy-950), var(--navy-900));
+  padding: 24px;
+}
+
+.admin-login-container {
+  width: 100%;
+  max-width: 440px;
+  padding: 48px 36px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, .07);
+  border: 1px solid rgba(212, 175, 55, .35);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, .4);
+}
+
+.admin-login-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.admin-login-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 16px;
+  color: var(--gold-400);
+  background: var(--grad-gold);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  box-shadow: 0 0 0 8px rgba(212, 175, 55, .2);
+}
+
+.admin-login-header h1 {
+  font-size: 1.75rem;
+  margin-bottom: 8px;
+  color: #fff;
+  letter-spacing: .02em;
+}
+
+.admin-login-header p {
+  color: #cdd8f5;
+  font-size: .9rem;
+}
+
+.admin-login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.admin-login-footer {
+  margin-top: 24px;
+  text-align: center;
+}
+
+.admin-login-footer .text-link {
+  color: var(--gold-400);
+  font-weight: 600;
+  font-size: .9rem;
+  text-decoration: none;
+  transition: color .2s;
+}
+
+.admin-login-footer .text-link:hover {
+  color: var(--gold-300);
+  text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+  .admin-login-container {
+    padding: 36px 24px;
+  }
+  .admin-login-header h1 {
+    font-size: 1.5rem;
+  }
+}
 .g-field:focus-within { border-color: var(--gold-400); }
 .g-field svg { color: #e8edfb; flex: none; }
 .g-field input { flex: 1; background: transparent; border: 0; outline: 0; color: #fff; font-size: .95rem; padding: 8px 0; letter-spacing: .04em; }
