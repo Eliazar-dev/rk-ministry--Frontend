@@ -18,13 +18,20 @@ export default function AdminLogin() {
     setLoading(true);
 
     try {
+      console.log('AdminLogin: Attempting login with', form.email);
       const result = await login(form);
+      console.log('AdminLogin: Login result', result);
+      console.log('AdminLogin: User is_staff?', result.user.is_staff);
+      
       if (result.user.is_staff) {
+        console.log('AdminLogin: Redirecting to /manage');
         navigate('/manage');
       } else {
+        console.log('AdminLogin: User is not staff');
         setErr('This login is for staff only. Please use the regular login page.');
       }
     } catch (error) {
+      console.error('AdminLogin: Login error', error);
       setErr(error.message || 'Login failed. Please try again.');
     } finally {
       setLoading(false);
