@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, Church, Globe2, Quote } from 'lucide-react';
+import { Quote } from 'lucide-react';
 import HeroCarousel from '../components/HeroCarousel';
 import SectionHeader from '../components/SectionHeader';
 import { SkeletonGrid } from '../components/Skeleton';
@@ -11,12 +11,6 @@ import { useList } from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import { useResume } from '../context/GateContext';
 import { useSEO } from '../hooks/useSEO';
-
-const PILLARS = [
-  [BookOpen, 'The Word', 'Sermons, Sabbath School lessons and devotionals that ground you in Scripture.'],
-  [Church, 'Worship & Family', 'A growing family of believers encouraging one another every week.'],
-  [Globe2, 'Mission', 'Crusades, health outreach and literature taking the gospel to people.'],
-];
 
 export default function Home() {
   useSEO({
@@ -38,25 +32,6 @@ export default function Home() {
   return (
     <>
       <HeroCarousel />
-
-      <section className="section intro" id="latest">
-        <div className="container">
-          <div className="intro-head">
-            <div className="eyebrow">Welcome</div>
-            <h2>A place to grow in faith, <em>together</em></h2>
-            <p>Watch, study and be equipped. Everything here is free — create an account once and it is all yours.</p>
-          </div>
-          <div className="pillars">
-            {PILLARS.map(([Icon, title, text]) => (
-              <div className="pillar" key={title}>
-                <span className="pillar-ic"><Icon size={26} /></span>
-                <h3>{title}</h3>
-                <p>{text}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       <section className="section alt">
         <div className="container">
