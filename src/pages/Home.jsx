@@ -58,8 +58,7 @@ export default function Home() {
       <section className="verse">
         <div className="container">
           <Quote size={34} />
-          <blockquote>Go ye into all the world, and preach the gospel to every creature.</blockquote>
-          <cite>Mark 16:15</cite>
+          <blockquote>Nurturing Hearts, Developing Minds, Transforming Lives</blockquote>
         </div>
       </section>
 

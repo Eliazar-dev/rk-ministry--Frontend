@@ -38,7 +38,7 @@ export default function About() {
                 <h3>{p.name || 'Richard Kwanya Snr'}</h3>
                 {p.title && <div className="pastor-role">{p.title}</div>}
                 {p.intro && <p className="pastor-intro">{p.intro}</p>}
-                {p.quote && <blockquote className="pastor-quote"><Quote size={22} />{p.quote}</blockquote>}
+                <blockquote className="pastor-quote"><Quote size={22} />Nurturing Hearts, Developing Minds, Transforming Lives</blockquote>
                 {paras.map((t, i) => <p key={i}>{t}</p>)}
                 {empty && <p>Biography coming soon.</p>}
               </div>
