@@ -155,4 +155,20 @@ a.a-kpi:hover { transform: translateY(-3px); }
 .a-todo { display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 12px; margin-top: 8px; border-radius: 12px; background: #f8f9fd; text-decoration: none; font-weight: 600; font-size: .88rem; } .a-todo b { margin-left: auto; background: var(--a-navy2); color: #fff; min-width: 28px; text-align: center; border-radius: 99px; padding: 2px 8px; }
 .a-counts { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 8px; } .a-counts a { padding: 10px 12px; border-radius: 12px; background: #f8f9fd; text-decoration: none; font-size: .8rem; color: var(--a-mut); font-weight: 600; } .a-counts b { display: block; font-size: 1.15rem; color: var(--a-navy); }
 .a-li { display: flex; justify-content: space-between; gap: 12px; align-items: center; padding: 10px 0; border-top: 1px solid var(--a-line); } .a-li:first-of-type { border-top: 0; } .a-li small { display: block; color: var(--a-mut); font-size: .74rem; max-width: 260px; }
+
+/* Lesson pages field */
+.a-lesson-pages { margin-top: 8px; }
+.a-lesson-pages-header { display: flex; gap: 8px; margin-bottom: 12px; }
+.a-lesson-pages-empty { display: grid; place-items: center; padding: 40px 20px; border-radius: 12px; background: #f8f9fd; color: var(--a-mut); text-align: center; }
+.a-lesson-pages-empty svg { margin-bottom: 12px; }
+.a-lesson-pages-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+.a-lesson-page-card { display: flex; flex-direction: column; gap: 8px; }
+.a-lesson-page-img { position: relative; aspect-ratio: 3/4; border-radius: 12px; overflow: hidden; background: #f0f2f5; }
+.a-lesson-page-img img { width: 100%; height: 100%; object-fit: cover; }
+.a-lesson-page-actions { position: absolute; bottom: 0; left: 0; right: 0; padding: 8px; display: flex; gap: 4px; background: linear-gradient(transparent, rgba(0,0,0,0.7)); }
+.a-lesson-page-actions button { background: rgba(255,255,255,0.9); border: none; border-radius: 6px; padding: 6px; cursor: pointer; color: var(--a-navy); }
+.a-lesson-page-actions button:disabled { opacity: 0.5; cursor: not-allowed; }
+.a-lesson-page-actions button:hover:not(:disabled) { background: #fff; }
+.a-input.a-small { font-size: .8rem; padding: 6px 10px; }
+
 @media (prefers-reduced-motion: reduce) { .adm * { animation: none !important; transition: none !important; } }

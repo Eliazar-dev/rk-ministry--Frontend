@@ -3,6 +3,7 @@ import { Loader2, Save, X } from 'lucide-react';
 import { ApiError } from '../api/http';
 import { mp, todayISO } from './api';
 import ImageField from './ImageField';
+import LessonPagesField from './LessonPagesField';
 import { Skeleton, Switch, useConfirm, useToast } from './ui';
 
 const empty = (f) => (f.type === 'bool' ? false : f.type === 'date' ? todayISO() : '');
@@ -160,6 +161,9 @@ export default function ResourceForm({ fields, endpoint, id, singleton, defaults
             )}
             {['image', 'raw', 'video'].includes(f.type) && (
               <ImageField id={`f-${f.name}`} type={f.type} folder={f.folder} value={vals[f.name]} onChange={set(f.name)} />
+            )}
+            {f.type === 'lesson-pages' && (
+              <LessonPagesField value={vals[f.name]} onChange={set(f.name)} lessonId={id} />
             )}
 
             {f.max && f.type === 'textarea' && <small className="a-help">{String(vals[f.name] || '').length}/{f.max}</small>}

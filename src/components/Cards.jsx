@@ -34,7 +34,7 @@ export function VideoCard({ item, onOpen }) {
   );
 }
 
-export function LessonCard({ item, onWatch }) {
+export function LessonCard({ item, onWatch, onViewLesson }) {
   const { user } = useAuth();
   const { guard } = useGate();
   const download = () =>
@@ -70,12 +70,19 @@ export function LessonCard({ item, onWatch }) {
       <div className="card-body">
         <h3>{item.title}</h3>
         <div className="meta"><span>{item.dateRange}</span><span>{item.teacher}</span></div>
-        <div className="card-actions">
-          <button className="btn btn-navy" onClick={() => guard({ type: 'lesson', id: item.id }, () => onWatch(item))}>
-            <PlayCircle size={15} /> Watch the lesson
-          </button>
-          {item.hasPdf !== false && (
-            <button className="btn btn-gold" onClick={download}><Download size={15} /> Download Pdf</button>
+        <div className="card-actions lesson-actions">
+          {item.hasVideo && (
+            <button className="btn btn-navy" onClick={() => guard({ type: 'lesson', id: item.id }, () => onWatch(item))}>
+              <PlayCircle size={15} /> Watch Video
+            </button>
+          )}
+          {item.hasPages && (
+            <button className="btn btn-navy" onClick={() => guard({ type: 'lesson', id: item.id }, () => onViewLesson(item))}>
+              <Play size={15} /> View Lesson
+            </button>
+          )}
+          {item.hasPdf && (
+            <button className="btn btn-gold" onClick={download}><Download size={15} /> Download PDF</button>
           )}
         </div>
       </div>

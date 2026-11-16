@@ -1261,3 +1261,220 @@ button.card { text-align: left; width: 100%; }
   .toast-x { display: none; }
   .toast-text strong { font-size: .84rem; white-space: nowrap; }
 }
+
+/* Lesson Reader Modal */
+.lesson-reader-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.95);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.lesson-reader-content {
+  width: 100%;
+  max-width: 1200px;
+  height: 100%;
+  max-height: 90vh;
+  background: var(--navy-950);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.lesson-reader-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+  background: linear-gradient(135deg, var(--navy-950), var(--navy-900));
+}
+
+.lesson-reader-title h2 {
+  font-size: 1.1rem;
+  color: #fff;
+  margin: 0;
+}
+
+.lesson-reader-counter {
+  color: var(--gold-400);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.lesson-reader-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.lesson-reader-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: rgba(212, 175, 55, 0.15);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  color: var(--gold-400);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.lesson-reader-btn:hover {
+  background: rgba(212, 175, 55, 0.25);
+  border-color: var(--gold-400);
+}
+
+.lesson-reader-close {
+  background: transparent;
+  border: none;
+  color: #fff;
+  padding: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.lesson-reader-close:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+}
+
+.lesson-reader-main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  overflow: auto;
+  background: #0a0a0a;
+  cursor: pointer;
+}
+
+.lesson-reader-main img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+  transition: transform 0.3s ease;
+}
+
+.lesson-reader-main.zoomed img {
+  transform: scale(1.5);
+  cursor: zoom-out;
+}
+
+.lesson-reader-main:not(.zoomed) img {
+  cursor: zoom-in;
+}
+
+.lesson-reader-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  color: #888;
+}
+
+.lesson-reader-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-top: 1px solid rgba(212, 175, 55, 0.2);
+  background: linear-gradient(135deg, var(--navy-900), var(--navy-950));
+}
+
+.lesson-reader-tabs {
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  max-width: 60%;
+  padding: 4px;
+}
+
+.lesson-reader-tab {
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: transparent;
+  border: none;
+  color: #888;
+  font-size: 0.8rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+
+.lesson-reader-tab:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+}
+
+.lesson-reader-tab.active {
+  background: var(--gold-400);
+  color: var(--navy-950);
+  font-weight: 600;
+}
+
+.lesson-reader-nav {
+  display: flex;
+  gap: 8px;
+}
+
+.lesson-reader-nav button {
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: rgba(212, 175, 55, 0.15);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  color: var(--gold-400);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.lesson-reader-nav button:hover:not(:disabled) {
+  background: rgba(212, 175, 55, 0.25);
+}
+
+.lesson-reader-nav button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* Lesson card actions - three buttons */
+.lesson-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+@media (max-width: 480px) {
+  .lesson-actions {
+    flex-direction: column;
+  }
+  .lesson-actions .btn {
+    width: 100%;
+  }
+  .lesson-reader-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .lesson-reader-actions {
+    flex-wrap: wrap;
+  }
+  .lesson-reader-footer {
+    flex-direction: column;
+    gap: 12px;
+  }
+  .lesson-reader-tabs {
+    max-width: 100%;
+  }
+}
+

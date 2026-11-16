@@ -6,6 +6,7 @@ import { SECTIONS } from '../data/sections';
 import { SkeletonGrid } from '../components/Skeleton';
 import { AlbumCard, ArticleCard, LessonCard, VideoCard } from '../components/Cards';
 import VideoModal from '../components/VideoModal';
+import LessonReader from '../components/LessonReader';
 import { useResume } from '../context/GateContext';
 import { useSEO } from '../hooks/useSEO';
 
@@ -25,9 +26,11 @@ function Inner({ slug, cfg }) {
   const [q, setQ] = useState('');
   const [cat, setCat] = useState('All');
   const [playing, setPlaying] = useState(null);
+  const [viewingLesson, setViewingLesson] = useState(null);
 
   const kind = cfg.kind === 'video' ? 'sermon' : 'lesson';
   const open = useCallback((item) => setPlaying(item), []);
+  const viewLesson = useCallback((item) => setViewingLesson(item), []);
   useResume(kind, cfg.kind === 'video' || cfg.kind === 'lesson' ? data : [], open);
 
   // albums are grouped by year, everything else by category
@@ -79,7 +82,7 @@ function Inner({ slug, cfg }) {
                 cfg.kind === 'video' ? (
                   <VideoCard key={d.id} item={d} onOpen={open} />
                 ) : cfg.kind === 'lesson' ? (
-                  <LessonCard key={d.id} item={d} onWatch={open} />
+                  <LessonCard key={d.id} item={d} onWatch={open} onViewLesson={viewLesson} />
                 ) : cfg.kind === 'gallery' ? (
                   <AlbumCard key={d.id} item={d} />
                 ) : (
@@ -92,6 +95,7 @@ function Inner({ slug, cfg }) {
       </section>
 
       {playing && <VideoModal item={playing} kind={kind} onClose={() => setPlaying(null)} />}
+      {viewingLesson && <LessonReader lesson={viewingLesson} isOpen={!!viewingLesson} onClose={() => setViewingLesson(null)} />}
     </>
   );
 }
