@@ -6,10 +6,6 @@ import { useToast } from '../context/ToastContext';
 
 const clamp = (n, lo, hi) => Math.min(hi, Math.max(lo, n));
 
-/** Cloudinary images get f_auto,q_auto,w_1600 for quick display; everything else loads as-is. */
-const displayUrl = (url = '') =>
-  url.includes('/upload/') ? url.replace('/upload/', '/upload/f_auto,q_auto,w_1600/') : url;
-
 export default function LessonReader({ lesson, isOpen, onClose, onWatchVideo }) {
   const [currentPage, setCurrentPage] = useState(0);
   const [imgReady, setImgReady] = useState(false);
@@ -50,7 +46,7 @@ export default function LessonReader({ lesson, isOpen, onClose, onWatchVideo }) 
     const nxt = pages[currentPage + 1];
     if (!nxt?.url) return;
     const im = new Image();
-    im.src = displayUrl(nxt.url);
+    im.src = nxt.url;
   }, [currentPage, pages]);
 
   const nextPage = () => {
@@ -214,7 +210,7 @@ export default function LessonReader({ lesson, isOpen, onClose, onWatchVideo }) 
             <div className="lesson-reader-imgwrap">
               {!imgReady && <div className="lesson-reader-skel" aria-hidden="true" />}
               <img
-                src={displayUrl(currentPageData.url)}
+                src={currentPageData.url}
                 alt={currentPageData.alt || currentPageData.label || `${lesson.title} page ${currentPage + 1}`}
                 onClick={toggleZoom}
                 onLoad={() => setImgReady(true)}
