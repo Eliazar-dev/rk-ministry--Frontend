@@ -1,13 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
-import { ArrowDown, ArrowUp, FileText, GripVertical, Image as ImageIcon, Loader2, Plus, Trash2 } from 'lucide-react';
+import { ArrowDown, ArrowUp, FileImage, FileText, GripVertical, Image as ImageIcon, Loader2, Plus, Trash2 } from 'lucide-react';
 import { PDFDocument } from 'pdf-lib';
 import { mp } from './api';
+import { MAX_PAGES, fetchPdfBytes, openPdf, pageToJpeg } from './pdfToPages';
 import { uploadToCloudinary } from './upload';
 import { Skeleton, useConfirm, useToast } from './ui';
 
 const results = (data) => (Array.isArray(data) ? data : data?.results || []);
 
-export default function LessonPagesField({ value, onChange, lessonId, onPdfUrl }) {
+export default function LessonPagesField({ value, onChange, lessonId, onPdfUrl, pdfUrl }) {
   const toast = useToast();
   const confirm = useConfirm();
   const [pages, setPages] = useState([]);
@@ -16,8 +17,15 @@ export default function LessonPagesField({ value, onChange, lessonId, onPdfUrl }
   const [pct, setPct] = useState(null);
   const [buildingPdf, setBuildingPdf] = useState(false);
   const [pdfPct, setPdfPct] = useState(null);
+  const [converting, setConverting] = useState(null); // {done,total,page} while converting a PDF
+  const [convFailed, setConvFailed] = useState([]); // 1-based page numbers that failed
+  const [pickPdf, setPickPdf] = useState(false); // show "choose file" after a CORS-blocked fetch
   const fileInputRef = useRef(null);
+  const pdfInputRef = useRef(null);
   const dragFrom = useRef(null);
+  const pagesRef = useRef([]);
+  const orderRef = useRef(0);
+  const pdfDocRef = useRef(null);
 
   // Load pages when lessonId changes
   useEffect(() => {
@@ -37,6 +45,7 @@ export default function LessonPagesField({ value, onChange, lessonId, onPdfUrl }
 
   // Update parent when pages change
   useEffect(() => {
+    pagesRef.current = pages;
     onChange(pages);
   }, [pages, onChange]);
 
@@ -164,11 +173,122 @@ export default function LessonPagesField({ value, onChange, lessonId, onPdfUrl }
     }
   };
 
+  /** Render + upload a list of 1-based PDF page numbers. Returns the ones that failed. */
+  const processPages = async (indices) => {
+    const doc = pdfDocRef.current?.doc;
+    if (!doc) return indices;
+    const failed = [];
+    let created = 0;
+    for (const n of indices) {
+      setConverting({ done: created, total: indices.length, page: n });
+      try {
+        const img = await pageToJpeg(doc, n);
+        setPct(0);
+        const url = await uploadToCloudinary(img, { type: 'image', folder: 'lessons', onProgress: setPct });
+        const rec = await mp('lesson-pages/', {
+          method: 'POST',
+          body: { lesson: lessonId, image_url: url, label: `Page ${n}`, order: orderRef.current },
+        });
+        orderRef.current += 1;
+        created += 1;
+        setPages((prev) => [...prev, rec]);
+        setConvFailed((prev) => prev.filter((f) => f !== n));
+      } catch (err) {
+        console.error(`PDF page ${n} failed:`, err);
+        failed.push(n);
+        setConvFailed((prev) => (prev.includes(n) ? prev : [...prev, n].sort((a, b) => a - b)));
+      }
+    }
+    setPct(null);
+    return failed;
+  };
+
+  const deleteAllPages = async () => {
+    const ids = pagesRef.current.map((p) => p.id);
+    await Promise.all(ids.map((id) => mp(`lesson-pages/${id}/`, { method: 'DELETE' }).catch(() => {})));
+    pagesRef.current = [];
+    orderRef.current = 0;
+    setPages([]);
+  };
+
+  /** file = a locally picked PDF (used when fetching the URL is blocked by CORS). */
+  const startConvert = async (file) => {
+    if (!lessonId || converting) return;
+    setConvFailed([]);
+    setConverting({ done: 0, total: 0, page: 0 });
+    pdfDocRef.current?.destroy?.().catch(() => {});
+    pdfDocRef.current = null;
+    try {
+      const data = file
+        ? new Uint8Array(await file.arrayBuffer())
+        : await fetchPdfBytes(pdfUrl);
+      const handle = await openPdf(data);
+      pdfDocRef.current = handle;
+      if (handle.numPages > MAX_PAGES) {
+        await handle.destroy();
+        pdfDocRef.current = null;
+        throw new Error(`This PDF has ${handle.numPages} pages. The limit is ${MAX_PAGES} — please split it into smaller files.`);
+      }
+      if (pagesRef.current.length) {
+        const ok = await confirm({
+          title: 'Replace existing pages?',
+          message: `This lesson already has ${pagesRef.current.length} page(s). Converting the PDF will delete them and create ${handle.numPages} new page(s).`,
+          confirmLabel: 'Replace',
+          danger: true,
+        });
+        if (!ok) {
+          await handle.destroy();
+          pdfDocRef.current = null;
+          return;
+        }
+        await deleteAllPages();
+      }
+      orderRef.current = pagesRef.current.length;
+      const failed = await processPages(Array.from({ length: handle.numPages }, (_, i) => i + 1));
+      if (!failed.length) {
+        await handle.destroy().catch(() => {});
+        pdfDocRef.current = null;
+        toast(`Converted ${handle.numPages} page${handle.numPages > 1 ? 's' : ''} from the PDF`);
+      } else {
+        toast(`${handle.numPages - failed.length} of ${handle.numPages} pages converted — retry the failed ones below`, 'error');
+      }
+    } catch (err) {
+      console.error('PDF conversion failed:', err);
+      if (err.message === 'CORS' && !file) {
+        setPickPdf(true);
+        toast('Could not read the PDF from its link — choose the PDF file from your computer instead.', 'error');
+      } else {
+        toast(err.message || 'Could not convert the PDF. Try again.', 'error');
+      }
+    } finally {
+      setConverting(null);
+      if (pdfInputRef.current) pdfInputRef.current.value = '';
+    }
+  };
+
+  const retryFailed = async () => {
+    if (!pdfDocRef.current || !convFailed.length || converting) return;
+    orderRef.current = pagesRef.current.length;
+    setConverting({ done: 0, total: convFailed.length, page: 0 });
+    try {
+      const still = await processPages(convFailed);
+      setConvFailed(still);
+      if (!still.length) {
+        await pdfDocRef.current?.destroy?.().catch(() => {});
+        pdfDocRef.current = null;
+        toast('All pages converted');
+      }
+    } finally {
+      setConverting(null);
+      setPct(null);
+    }
+  };
+
   if (loading) {
     return <div className="a-lesson-pages"><Skeleton h={120} /></div>;
   }
 
-  const busy = uploading !== 0 || buildingPdf;
+  const busy = uploading !== 0 || buildingPdf || converting !== null;
 
   return (
     <div className="a-lesson-pages">
@@ -179,6 +299,25 @@ export default function LessonPagesField({ value, onChange, lessonId, onPdfUrl }
         <button className="a-btn" onClick={handleBuildPdf} disabled={busy || !pages.length} title={pages.length ? '' : 'Add at least one page first'}>
           {buildingPdf ? <><Loader2 size={16} className="spin" /> Building {pdfPct || ''}…</> : <><FileText size={16} /> Build PDF from pages</>}
         </button>
+        {pdfUrl && (
+          <button
+            className="a-btn"
+            onClick={() => startConvert()}
+            disabled={busy || !lessonId}
+            title={lessonId ? 'Turn the lesson PDF into page images' : 'Save the lesson first'}
+          >
+            {converting ? (
+              <><Loader2 size={16} className="spin" /> {converting.total ? `Page ${converting.page} of ${converting.total}` : 'Opening PDF…'}…</>
+            ) : (
+              <><FileImage size={16} /> Convert PDF to pages</>
+            )}
+          </button>
+        )}
+        {pickPdf && !converting && (
+          <button className="a-btn" onClick={() => pdfInputRef.current?.click()}>
+            <FileText size={16} /> Choose PDF file…
+          </button>
+        )}
         {pct !== null && (
           <div className="a-progress" style={{ flex: 1, minWidth: 120 }} role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}>
             <div><i style={{ width: `${pct}%` }} /></div>
@@ -192,8 +331,25 @@ export default function LessonPagesField({ value, onChange, lessonId, onPdfUrl }
           style={{ display: 'none' }}
           onChange={(e) => handleFileSelect(e.target.files)}
         />
+        <input
+          ref={pdfInputRef}
+          type="file"
+          accept="application/pdf,.pdf"
+          style={{ display: 'none' }}
+          onChange={(e) => e.target.files?.[0] && startConvert(e.target.files[0])}
+        />
       </div>
       {!lessonId && <small className="a-help">Save the lesson first, then add its pages here.</small>}
+      {convFailed.length > 0 && !converting && (
+        <div className="a-lesson-pages-warn" role="alert">
+          <span>
+            Could not convert page{convFailed.length > 1 ? 's' : ''} {convFailed.join(', ')} of the PDF.
+          </span>
+          <button className="a-btn" onClick={retryFailed} disabled={busy}>
+            Retry failed page{convFailed.length > 1 ? 's' : ''}
+          </button>
+        </div>
+      )}
 
       {pages.length === 0 ? (
         <div className="a-lesson-pages-empty">

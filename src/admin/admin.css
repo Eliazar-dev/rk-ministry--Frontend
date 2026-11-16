@@ -172,6 +172,8 @@ a.a-kpi:hover { transform: translateY(-3px); }
 .a-lesson-page-actions button { background: rgba(255,255,255,0.9); border: none; border-radius: 6px; padding: 6px; cursor: pointer; color: var(--a-navy); }
 .a-lesson-page-actions button:disabled { opacity: 0.5; cursor: not-allowed; }
 .a-lesson-page-actions button:hover:not(:disabled) { background: #fff; }
+.a-lesson-pages-warn { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 10px; padding: 10px 14px; border-radius: 12px; background: #fff7ed; border: 1px solid #fed7aa; color: #9a3412; font-size: .85rem; }
+.a-lesson-pages-header { flex-wrap: wrap; }
 .a-input.a-small { font-size: .8rem; padding: 6px 10px; }
 
 @media (prefers-reduced-motion: reduce) { .adm * { animation: none !important; transition: none !important; } }

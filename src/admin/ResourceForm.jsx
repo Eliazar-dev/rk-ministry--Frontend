@@ -165,7 +165,7 @@ export default function ResourceForm({ fields, endpoint, id, singleton, defaults
               <ImageField id={`f-${f.name}`} type={f.type} folder={f.folder} value={vals[f.name]} onChange={set(f.name)} />
             )}
             {f.type === 'lesson-pages' && (
-              <LessonPagesField value={vals[f.name]} onChange={set(f.name)} lessonId={id} onPdfUrl={(url) => set('pdf_url')(url)} />
+              <LessonPagesField value={vals[f.name]} onChange={set(f.name)} lessonId={id} onPdfUrl={(url) => set('pdf_url')(url)} pdfUrl={vals.pdf_url} />
             )}
 
             {f.max && f.type === 'textarea' && <small className="a-help">{String(vals[f.name] || '').length}/{f.max}</small>}

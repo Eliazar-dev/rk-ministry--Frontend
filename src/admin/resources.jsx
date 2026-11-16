@@ -46,7 +46,7 @@ export const RESOURCES = {
       IMG('cover_url', 'Cover image', 'cover_src'),
       { name: 'description', label: 'Description', type: 'textarea', rows: 3 },
       { name: 'published', label: 'Show on the website', type: 'bool', default: true },
-      { name: 'pages', label: 'Lesson pages', type: 'lesson-pages', help: 'Upload lesson page images. You can reorder them and build a PDF from them.' },
+      { name: 'pages', label: 'Lesson pages', type: 'lesson-pages', help: 'Upload page images, reorder them, or convert the lesson PDF into pages. You can also build a PDF from the pages.' },
     ],
   },
   devotionals: {
