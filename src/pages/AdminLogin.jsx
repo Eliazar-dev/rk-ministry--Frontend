@@ -1,15 +1,26 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Lock } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { LogoImg } from '../components/Logo';
 
 export default function AdminLogin() {
-  const { login } = useAuth();
+  const { login, user } = useAuth();
   const navigate = useNavigate();
   const [form, setForm] = useState({ email: '', password: '' });
   const [err, setErr] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user) {
+      if (user.is_staff) {
+        navigate('/manage', { replace: true });
+      } else {
+        setErr('You are logged in but not a staff member. This login is for staff only.');
+      }
+    }
+  }, [user, navigate]);
 
   const set = (k) => (e) => setForm({ ...form, [k]: e.target.value });
 
