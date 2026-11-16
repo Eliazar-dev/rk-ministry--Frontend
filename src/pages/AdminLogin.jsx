@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Lock, Shield } from 'lucide-react';
+import { Lock } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { LogoImg } from '../components/Logo';
 
@@ -39,7 +39,6 @@ export default function AdminLogin() {
           <div className="admin-login-logo">
             <LogoImg alt="Richard Kwanya Snr Ministry" />
           </div>
-          <Shield size={48} className="admin-login-icon" />
           <h1>Admin Portal</h1>
           <p>Richard Kwanya Snr Ministry Management</p>
         </div>
