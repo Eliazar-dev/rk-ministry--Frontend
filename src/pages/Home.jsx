@@ -9,6 +9,7 @@ import VideoModal from '../components/VideoModal';
 import LessonReader from '../components/LessonReader';
 import PrayerForm from '../components/PrayerForm';
 import { useList } from '../api/client';
+import { useLiveStream } from '../api/live';
 import { useAuth } from '../context/AuthContext';
 import { useResume } from '../context/GateContext';
 import { useSEO } from '../hooks/useSEO';
@@ -25,6 +26,7 @@ export default function Home() {
   const products = useList('products');
   const [playing, setPlaying] = useState(null); // { item, kind }
   const [viewingLesson, setViewingLesson] = useState(null);
+  const { data: live } = useLiveStream();
 
   const openSermon = useCallback((item) => setPlaying({ item, kind: 'sermon' }), []);
   const openLesson = useCallback((item) => setPlaying({ item, kind: 'lesson' }), []);
@@ -40,6 +42,12 @@ export default function Home() {
   return (
     <>
       <HeroCarousel />
+
+      {live?.isLive && (
+        <Link to="/live" className="live-banner">
+          <span className="live-dot" /> We are live — Watch now
+        </Link>
+      )}
 
       <section className="section alt">
         <div className="container">

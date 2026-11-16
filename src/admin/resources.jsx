@@ -158,7 +158,7 @@ export const PASTOR = {
 
 export const NAV = [
   ['Overview', [['', 'Dashboard', 'LayoutDashboard']]],
-  ['Content', [['hero', 'Carousel videos', 'Film'], ['sermons', 'Sermons', 'Video'], ['lessons', 'Sabbath lessons', 'BookOpen'], ['devotionals', 'Devotionals', 'Sunrise'], ['articles', 'Articles', 'Newspaper'], ['albums', 'Gallery albums', 'Images'], ['pastor', 'Pastor biography', 'UserRound']]],
+  ['Content', [['hero', 'Carousel videos', 'Film'], ['live', 'Live stream', 'Radio'], ['sermons', 'Sermons', 'Video'], ['lessons', 'Sabbath lessons', 'BookOpen'], ['devotionals', 'Devotionals', 'Sunrise'], ['articles', 'Articles', 'Newspaper'], ['albums', 'Gallery albums', 'Images'], ['pastor', 'Pastor biography', 'UserRound']]],
   ['Store', [['products', 'Products', 'Package'], ['orders', 'Orders', 'ShoppingBag'], ['donations', 'Donations', 'HeartHandshake']]],
   ['Community', [['prayers', 'Prayer requests', 'HandHeart'], ['messages', 'Contact messages', 'Mail'], ['comments', 'Comments', 'MessageSquare'], ['members', 'Members', 'Users']]],
 ];

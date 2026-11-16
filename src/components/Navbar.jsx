@@ -4,6 +4,7 @@ import { ChevronDown, Heart, LayoutDashboard, LogIn, Menu, ShoppingCart, User, X
 import Logo from './Logo';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
+import { useLiveStream } from '../api/live';
 
 export const RESOURCE_LINKS = [
   ['Devotionals', '/resources/devotionals'],
@@ -33,6 +34,8 @@ export default function Navbar({ overlay = false }) {
   const [mobRes, setMobRes] = useState(false);
   const { user } = useAuth();
   const { count } = useCart();
+  const { data: live } = useLiveStream();
+  const isLive = Boolean(live?.isLive);
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
@@ -54,6 +57,11 @@ export default function Navbar({ overlay = false }) {
           <ul className="nav-links">
             <li>
               <NavLink to="/" end className="nav-link">Home</NavLink>
+            </li>
+            <li>
+              <NavLink to="/live" className="nav-link">
+                Live {isLive && <span className="live-dot" aria-label="Live now" />}
+              </NavLink>
             </li>
             <li className="dd">
               <span className="nav-link" tabIndex={0} role="button">
@@ -130,6 +138,9 @@ export default function Navbar({ overlay = false }) {
 
         <nav>
           <Link to="/" style={{ '--i': 0 }}>Home</Link>
+          <Link to="/live" style={{ '--i': 0 }}>
+            Live {isLive && <span className="live-dot" aria-label="Live now" />}
+          </Link>
           <button className="drawer-toggle" style={{ '--i': 1 }} onClick={() => setMobRes((v) => !v)}>
             Resources <ChevronDown size={18} style={{ transform: mobRes ? 'rotate(180deg)' : 'none', transition: '.3s' }} />
           </button>

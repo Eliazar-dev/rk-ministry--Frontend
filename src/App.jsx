@@ -12,6 +12,7 @@ import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
 import Donate from './pages/Donate';
 import Contact from './pages/Contact';
+import Live from './pages/Live';
 import Profile from './pages/Profile';
 import About from './pages/About';
 import AdminLogin from './pages/AdminLogin';
@@ -52,6 +53,7 @@ export default function App() {
         <Route path="/checkout" element={<Protected><Checkout /></Protected>} />
         <Route path="/donate" element={<Donate />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/live" element={<Live />} />
         <Route path="/profile" element={<Protected><Profile /></Protected>} />
         <Route path="/about" element={<About />} />
         <Route path="*" element={<Navigate to="/" replace />} />

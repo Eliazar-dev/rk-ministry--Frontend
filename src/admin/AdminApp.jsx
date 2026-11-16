@@ -2,19 +2,20 @@ import { useEffect, useState } from 'react';
 import { Link, NavLink, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import {
   BookOpen, ExternalLink, Film, HandHeart, HeartHandshake, Images, LayoutDashboard, LogOut, Mail, Menu, MessageSquare,
-  Newspaper, Package, ShoppingBag, Sunrise, UserRound, Users, Video, X,
+  Newspaper, Package, Radio, ShoppingBag, Sunrise, UserRound, Users, Video, X,
 } from 'lucide-react';
 import { LogoImg } from '../components/Logo';
 import { useAuth } from '../context/AuthContext';
 import { hasApi } from '../api/http';
 import Dashboard from './Dashboard';
+import LivePage from './LivePage';
 import ResourceList from './ResourceList';
 import ResourceForm from './ResourceForm';
 import { NAV, PASTOR, RESOURCES } from './resources';
 import { ConfirmProvider, ToastProvider, usePageTitle } from './ui';
 import './admin.css';
 
-const ICONS = { LayoutDashboard, Film, Video, BookOpen, Sunrise, Newspaper, Images, UserRound, Package, ShoppingBag, HeartHandshake, HandHeart, Mail, MessageSquare, Users };
+const ICONS = { LayoutDashboard, Film, Video, BookOpen, Sunrise, Newspaper, Images, UserRound, Package, ShoppingBag, HeartHandshake, HandHeart, Mail, MessageSquare, Users, Radio };
 
 function Notice({ title, children }) {
   return (
@@ -42,6 +43,7 @@ function Resource() {
   const { pathname } = useLocation();
   const key = pathname.replace(/^\/manage\//, '').split('/')[0];
   if (key === 'pastor') return <PastorPage />;
+  if (key === 'live') return <LivePage />;
   if (!RESOURCES[key]) return <Navigate to="/manage" replace />;
   return <ResourceList key={key} resKey={key} />;
 }
