@@ -17,20 +17,21 @@ export function useSEO({ title, description, image, canonical, type = 'website',
     metaDesc.content = description || 'Richard Kwanya Snr Ministry — Equipping people, transforming lives.';
 
     // Update canonical URL
-    let canonical = document.querySelector('link[rel="canonical"]');
-    if (!canonical) {
-      canonical = document.createElement('link');
-      canonical.rel = 'canonical';
-      document.head.appendChild(canonical);
+    const pageUrl = canonical || `${SITE_URL}${window.location.pathname}`;
+    let canonicalLink = document.querySelector('link[rel="canonical"]');
+    if (!canonicalLink) {
+      canonicalLink = document.createElement('link');
+      canonicalLink.rel = 'canonical';
+      document.head.appendChild(canonicalLink);
     }
-    canonical.href = canonical || `${SITE_URL}${window.location.pathname}`;
+    canonicalLink.href = pageUrl;
 
     // Update Open Graph tags
     updateMetaTag('og:title', title || 'Richard Kwanya Snr | #Babawa');
     updateMetaTag('og:description', description || 'Equipping people, transforming lives.');
     updateMetaTag('og:type', type);
     updateMetaTag('og:image', image || LOGO_URL);
-    updateMetaTag('og:url', canonical || `${SITE_URL}${window.location.pathname}`);
+    updateMetaTag('og:url', pageUrl);
 
     // Update Twitter card tags
     updateMetaTag('twitter:card', 'summary_large_image');

@@ -19,53 +19,42 @@ export default function HeroCarousel() {
   const many = slides.length > 1;
 
   const next = useCallback(() => {
-    console.log('HeroCarousel: advancing to next slide');
     setIdx((i) => (i + 1) % slides.length);
   }, [slides.length]);
 
   useEffect(() => {
+    const cleanups = [];
     refs.current.forEach((v, i) => {
       if (!v) return;
 
       if (i === idx) {
-        // Active slide
-        const handleEnded = () => {
-          console.log('HeroCarousel: video ended for slide', i);
-          if (many) next();
-        };
+        // Advance only when the video ends, errors or stalls — never on a timer,
+        // so a slow connection can't cut a video off mid-play.
+        const advance = () => many && next();
+        const onEnded = () => advance();
+        const onError = () => advance();
+        const onStalled = () => advance();
 
-        const handleError = (e) => {
-          console.error('HeroCarousel: video error for slide', i, e);
-          if (many) {
-            console.log('HeroCarousel: skipping to next slide due to error');
-            next();
-          }
-        };
+        v.addEventListener('ended', onEnded);
+        v.addEventListener('error', onError);
+        v.addEventListener('stalled', onStalled);
+        cleanups.push(() => {
+          v.removeEventListener('ended', onEnded);
+          v.removeEventListener('error', onError);
+          v.removeEventListener('stalled', onStalled);
+        });
 
-        v.addEventListener('ended', handleEnded);
-        v.addEventListener('error', handleError);
-
-        // Try to play
         v.currentTime = 0;
         if (!reduceMotion()) {
-          v.play().catch((err) => {
-            console.error('HeroCarousel: play() failed:', err.message);
-            // Retry once after 500ms
-            setTimeout(() => {
-              v.play().catch((e) => console.error('HeroCarousel: retry failed:', e.message));
-            }, 500);
+          v.play().catch(() => {
+            setTimeout(() => v.play().catch(() => {}), 500);
           });
         }
-
-        return () => {
-          v.removeEventListener('ended', handleEnded);
-          v.removeEventListener('error', handleError);
-        };
       } else {
-        // Inactive slide - pause it
         v.pause();
       }
     });
+    return () => cleanups.forEach((fn) => fn());
   }, [idx, many, next]);
 
   // Resume on visibility change
@@ -95,7 +84,7 @@ export default function HeroCarousel() {
             loop={!many}
             playsInline
             autoPlay={i === 0 && !reduceMotion()}
-            preload={i === idx ? 'auto' : 'metadata'}
+            preload={i === idx || i === (idx + 1) % slides.length ? 'auto' : 'metadata'}
           />
         </div>
       ))}

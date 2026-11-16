@@ -21,6 +21,7 @@ export default function LivePage() {
   const toast = useToast();
   const confirm = useConfirm();
   const [streams, setStreams] = useState([]);
+  const [sermonLinks, setSermonLinks] = useState(new Set()); // youtube_urls already saved as sermons
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(null); // null | 'new' | record
   const [form, setForm] = useState(EMPTY);
@@ -32,6 +33,10 @@ export default function LivePage() {
       .then((d) => setStreams(results(d)))
       .catch((e) => toast(e.message, 'error'))
       .finally(() => setLoading(false));
+    // Which streams already exist as sermons? Prevents duplicate "Save as sermon".
+    mp('sermons/?page_size=100')
+      .then((d) => setSermonLinks(new Set(results(d).map((s) => s.youtube_url).filter(Boolean))))
+      .catch(() => {});
   }, [toast]);
 
   useEffect(load, [load]);
@@ -116,6 +121,7 @@ export default function LivePage() {
         method: 'POST',
         body: { title: s.title, youtube_url: s.youtube_url, description: s.description || '', date: todayISO() },
       });
+      setSermonLinks((prev) => new Set(prev).add(s.youtube_url));
       toast('Saved as a sermon — it is on the Sermons page now');
     } catch (e) {
       toast(e.message, 'error');
@@ -205,7 +211,7 @@ export default function LivePage() {
                           </td>
                           <td className="a-actions">
                             {!isLive && <button className="a-btn" onClick={() => goLive(s)} disabled={busyId === s.id}>Go live</button>}
-                            {isEnded && (
+                            {isEnded && !sermonLinks.has(s.youtube_url) && (
                               <button className="a-btn" onClick={() => saveAsSermon(s)} disabled={busyId === s.id} title="Add this stream to the Sermons page">
                                 <Video size={14} /> Save as sermon
                               </button>
