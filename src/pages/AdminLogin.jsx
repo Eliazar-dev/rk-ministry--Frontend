@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Lock, Shield } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { LogoImg } from '../components/Logo';
 
 export default function AdminLogin() {
   const { login } = useAuth();
@@ -18,20 +19,13 @@ export default function AdminLogin() {
     setLoading(true);
 
     try {
-      console.log('AdminLogin: Attempting login with', form.email);
       const result = await login(form);
-      console.log('AdminLogin: Login result', result);
-      console.log('AdminLogin: User is_staff?', result.user.is_staff);
-      
       if (result.user.is_staff) {
-        console.log('AdminLogin: Redirecting to /manage');
         navigate('/manage');
       } else {
-        console.log('AdminLogin: User is not staff');
         setErr('This login is for staff only. Please use the regular login page.');
       }
     } catch (error) {
-      console.error('AdminLogin: Login error', error);
       setErr(error.message || 'Login failed. Please try again.');
     } finally {
       setLoading(false);
@@ -42,6 +36,9 @@ export default function AdminLogin() {
     <div className="admin-login-page">
       <div className="admin-login-container">
         <div className="admin-login-header">
+          <div className="admin-login-logo">
+            <LogoImg alt="Richard Kwanya Snr Ministry" />
+          </div>
           <Shield size={48} className="admin-login-icon" />
           <h1>Admin Portal</h1>
           <p>Richard Kwanya Snr Ministry Management</p>
