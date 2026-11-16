@@ -61,7 +61,8 @@ export default function ResourceForm({ fields, endpoint, id, singleton, defaults
   }, [path]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const base = useMemo(() => initialFor(fields, rec, defaults), [fields, rec, defaults]);
-  const dirty = fields.some((f) => vals[f.name] !== base[f.name]);
+  // 'lesson-pages' manages its own saves instantly — it must not mark the form dirty or be submitted.
+  const dirty = fields.some((f) => f.type !== 'lesson-pages' && vals[f.name] !== base[f.name]);
   const set = (name) => (value) => {
     setVals((v) => ({ ...v, [name]: value }));
     setErrs((e) => (e[name] ? { ...e, [name]: undefined } : e));
@@ -93,6 +94,7 @@ export default function ResourceForm({ fields, endpoint, id, singleton, defaults
     }
     const payload = {};
     for (const f of fields) {
+      if (f.type === 'lesson-pages') continue;
       const v = vals[f.name];
       const changed = v !== base[f.name];
       if (id || singleton ? changed : v !== '') payload[f.name] = f.type === 'number' ? Number(v) : v;
@@ -163,7 +165,7 @@ export default function ResourceForm({ fields, endpoint, id, singleton, defaults
               <ImageField id={`f-${f.name}`} type={f.type} folder={f.folder} value={vals[f.name]} onChange={set(f.name)} />
             )}
             {f.type === 'lesson-pages' && (
-              <LessonPagesField value={vals[f.name]} onChange={set(f.name)} lessonId={id} />
+              <LessonPagesField value={vals[f.name]} onChange={set(f.name)} lessonId={id} onPdfUrl={(url) => set('pdf_url')(url)} />
             )}
 
             {f.max && f.type === 'textarea' && <small className="a-help">{String(vals[f.name] || '').length}/{f.max}</small>}

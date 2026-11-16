@@ -1,21 +1,37 @@
 import { useEffect, useRef, useState } from 'react';
-import { ArrowLeft, ArrowRight, Download, FileText, Image as ImageIcon, Loader2, X } from 'lucide-react';
+import { ArrowLeft, ArrowRight, FileText, Image as ImageIcon, X } from 'lucide-react';
+import { cloudinaryDownload, slugify } from '../api/client';
 import { useGate } from '../context/GateContext';
+import { useToast } from '../context/ToastContext';
 
-export default function LessonReader({ lesson, isOpen, onClose }) {
+const isIOS = () => /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const clamp = (n, lo, hi) => Math.min(hi, Math.max(lo, n));
+
+/** Cloudinary images get f_auto,q_auto,w_1600 for quick display; everything else loads as-is. */
+const displayUrl = (url = '') =>
+  url.includes('/upload/') ? url.replace('/upload/', '/upload/f_auto,q_auto,w_1600/') : url;
+
+export default function LessonReader({ lesson, isOpen, onClose, onWatchVideo }) {
   const [currentPage, setCurrentPage] = useState(0);
-  const [loading, setLoading] = useState(false);
-  const [zoomed, setZoomed] = useState(false);
+  const [imgReady, setImgReady] = useState(false);
+  const [scale, setScale] = useState(1);
   const containerRef = useRef(null);
+  const contentRef = useRef(null);
+  const pinch = useRef(null);
+  const swipe = useRef(null);
   const { guard } = useGate();
+  const toast = useToast();
 
   const pages = lesson?.pages || [];
+  const lessonSlug = slugify(lesson?.title || `lesson-${lesson?.id || ''}`);
 
   useEffect(() => {
     if (isOpen) {
       setCurrentPage(0);
-      setZoomed(false);
+      setScale(1);
+      setImgReady(false);
       document.body.style.overflow = 'hidden';
+      contentRef.current?.querySelector('.lesson-reader-close')?.focus();
     } else {
       document.body.style.overflow = '';
     }
@@ -24,125 +40,179 @@ export default function LessonReader({ lesson, isOpen, onClose }) {
     };
   }, [isOpen]);
 
-  const nextPage = () => {
-    if (currentPage < pages.length - 1) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
+  // Reset image state whenever the visible page changes
+  useEffect(() => {
+    setImgReady(false);
+    setScale(1);
+  }, [currentPage, isOpen]);
 
+  // Preload the next page so flipping feels instant; the rest stay lazy
+  useEffect(() => {
+    const nxt = pages[currentPage + 1];
+    if (!nxt?.url) return;
+    const im = new Image();
+    im.src = displayUrl(nxt.url);
+  }, [currentPage, pages]);
+
+  const nextPage = () => {
+    if (currentPage < pages.length - 1) setCurrentPage(currentPage + 1);
+  };
   const prevPage = () => {
-    if (currentPage > 0) {
-      setCurrentPage(currentPage - 1);
-    }
+    if (currentPage > 0) setCurrentPage(currentPage - 1);
   };
 
   const handleKeyDown = (e) => {
     if (!isOpen) return;
-    if (e.key === 'Escape') onClose();
-    if (e.key === 'ArrowRight') nextPage();
-    if (e.key === 'ArrowLeft') prevPage();
+    if (e.key === 'Escape') return onClose();
+    if (e.key === 'ArrowRight') return nextPage();
+    if (e.key === 'ArrowLeft') return prevPage();
+    // Focus trap: keep Tab inside the reader
+    if (e.key === 'Tab' && contentRef.current) {
+      const els = [...contentRef.current.querySelectorAll('button, [href], input, [tabindex]:not([tabindex="-1"])')].filter((el) => !el.disabled);
+      if (!els.length) return;
+      const first = els[0];
+      const last = els[els.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
   };
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, currentPage]);
+  }); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Touch: one finger swipes between pages, two fingers pinch to zoom
+  const dist = (t) => Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY);
 
   const handleTouchStart = (e) => {
-    if (!containerRef.current) return;
-    containerRef.current.touchStartX = e.touches[0].clientX;
-  };
-
-  const handleTouchEnd = (e) => {
-    if (!containerRef.current) return;
-    const touchEndX = e.changedTouches[0].clientX;
-    const diff = containerRef.current.touchStartX - touchEndX;
-    if (Math.abs(diff) > 50) {
-      if (diff > 0) nextPage();
-      else prevPage();
+    const t = e.touches;
+    if (t.length === 2) {
+      pinch.current = { d: dist(t), s: scale };
+      swipe.current = null;
+    } else if (t.length === 1) {
+      swipe.current = { x: t[0].clientX, y: t[0].clientY };
+      pinch.current = null;
     }
   };
 
-  const toggleZoom = () => {
-    setZoomed(!zoomed);
+  const handleTouchMove = (e) => {
+    const t = e.touches;
+    if (t.length === 2 && pinch.current) {
+      e.preventDefault();
+      setScale(clamp(pinch.current.s * (dist(t) / pinch.current.d), 1, 4));
+    } else if (t.length === 1 && swipe.current && scale === 1) {
+      const dx = t[0].clientX - swipe.current.x;
+      const dy = t[0].clientY - swipe.current.y;
+      if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+        swipe.current = null;
+        dx < 0 ? nextPage() : prevPage();
+      }
+    }
+  };
+
+  const handleTouchEnd = () => {
+    pinch.current = null;
+    swipe.current = null;
+  };
+
+  const toggleZoom = () => setScale((s) => (s > 1 ? 1 : 2));
+
+  /** Real file download: fl_attachment URL first, blob fallback, then "press and hold". */
+  const saveFile = async (url, fname) => {
+    const isAttachment = url.includes('/upload/fl_attachment:');
+    // iOS Safari ignores download attributes — fetch and save the blob ourselves.
+    if (isIOS() || !isAttachment) {
+      try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('fetch failed');
+        const blob = await res.blob();
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = fname;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(a.href);
+        return;
+      } catch {
+        try {
+          window.open(url, '_blank', 'noopener,noreferrer');
+          return;
+        } catch {
+          toast('Press and hold the file to save it.');
+        }
+      }
+      return;
+    }
+    // Desktop: fl_attachment makes Cloudinary send Content-Disposition: attachment → real download.
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fname;
+    a.rel = 'noopener';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   };
 
   const downloadImage = () => {
     const page = pages[currentPage];
-    if (!page) return;
-    
-    // Use Cloudinary URL with fl_attachment for download
-    const url = page.url.replace('/upload/', `/upload/fl_attachment:${lesson.quarter}-${page.label.replace(/\s+/g, '-')}/`);
-    
-    fetch(url)
-      .then(res => {
-        if (!res.ok) throw new Error('Failed to download');
-        return res.blob();
-      })
-      .then(blob => {
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = `${lesson.quarter}-${page.label.replace(/\s+/g, '-')}.jpg`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(a.href);
-      })
-      .catch(() => {
-        // Fallback: open in new tab
-        window.open(page.url, '_blank', 'noopener,noreferrer');
-      });
+    if (!page?.url) return;
+    const labelSlug = slugify(page.label || `page-${currentPage + 1}`);
+    saveFile(cloudinaryDownload(page.url, `${lessonSlug}-${labelSlug}`), `${lessonSlug}-${labelSlug}.jpg`);
   };
 
   const downloadPdf = () => {
-    if (!lesson.pdf) return;
-    
-    fetch(lesson.pdf)
-      .then(res => {
-        if (!res.ok) throw new Error('Failed to download PDF');
-        return res.blob();
-      })
-      .then(blob => {
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = `${lesson.quarter}-${lesson.title}.pdf`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(a.href);
-      })
-      .catch(() => {
-        window.open(lesson.pdf, '_blank', 'noopener,noreferrer');
-      });
+    if (!lesson?.pdf) return;
+    const fname = `${lessonSlug}.pdf`;
+    saveFile(cloudinaryDownload(lesson.pdf, lessonSlug), fname);
   };
 
   if (!isOpen || !lesson) return null;
 
   const currentPageData = pages[currentPage];
+  const zoomed = scale > 1;
 
   return (
-    <div className="lesson-reader-modal" onClick={onClose}>
-      <div className="lesson-reader-content" onClick={(e) => e.stopPropagation()} ref={containerRef}>
+    <div className="lesson-reader-modal" onClick={onClose} role="presentation">
+      <div
+        className="lesson-reader-content"
+        role="dialog"
+        aria-modal="true"
+        aria-label={`${lesson.title} — lesson pages`}
+        onClick={(e) => e.stopPropagation()}
+        ref={(el) => {
+          contentRef.current = el;
+          containerRef.current = el;
+        }}
+      >
         <header className="lesson-reader-header">
           <div className="lesson-reader-title">
             <h2>{lesson.title}</h2>
             <span className="lesson-reader-counter">{currentPage + 1} / {pages.length}</span>
           </div>
           <div className="lesson-reader-actions">
-            {lesson.hasVideo && (
-              <button className="lesson-reader-btn" onClick={() => guard({ type: 'lesson', id: lesson.id }, () => onClose())}>
-                <ArrowLeft size={16} /> Watch Video
+            {lesson.hasVideo && onWatchVideo && (
+              <button className="lesson-reader-btn" onClick={() => guard({ type: 'lesson', id: lesson.id }, () => onWatchVideo(lesson))}>
+                <ArrowLeft size={16} style={{ transform: 'scaleX(-1)' }} /> Watch Video
               </button>
             )}
-            <button className="lesson-reader-btn" onClick={downloadImage}>
-              <ImageIcon size={16} /> Download Image
-            </button>
+            {currentPageData && (
+              <button className="lesson-reader-btn" onClick={downloadImage}>
+                <ImageIcon size={16} /> Download image
+              </button>
+            )}
             {lesson.hasPdf && (
               <button className="lesson-reader-btn" onClick={downloadPdf}>
                 <FileText size={16} /> Download PDF
               </button>
             )}
-            <button className="lesson-reader-close" onClick={onClose}>
+            <button className="lesson-reader-close" onClick={onClose} aria-label="Close lesson">
               <X size={20} />
             </button>
           </div>
@@ -151,28 +221,36 @@ export default function LessonReader({ lesson, isOpen, onClose }) {
         <div
           className={`lesson-reader-main ${zoomed ? 'zoomed' : ''}`}
           onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
         >
           {currentPageData ? (
-            <img
-              src={currentPageData.url.replace('/upload/', '/upload/f_auto,q_auto,w_1600/')}
-              alt={currentPageData.alt_text || currentPageData.label}
-              onClick={toggleZoom}
-              loading="lazy"
-            />
+            <div className="lesson-reader-imgwrap">
+              {!imgReady && <div className="lesson-reader-skel" aria-hidden="true" />}
+              <img
+                src={displayUrl(currentPageData.url)}
+                alt={currentPageData.alt || currentPageData.label || `${lesson.title} page ${currentPage + 1}`}
+                onClick={toggleZoom}
+                onLoad={() => setImgReady(true)}
+                onError={() => setImgReady(true)}
+                style={{ transform: `scale(${scale})` }}
+                draggable={false}
+              />
+            </div>
           ) : (
             <div className="lesson-reader-empty">
-              <Loader2 size={32} className="spin" />
-              <p>Loading page...</p>
+              <p>No pages in this lesson yet.</p>
             </div>
           )}
         </div>
 
         <footer className="lesson-reader-footer">
-          <div className="lesson-reader-tabs">
+          <div className="lesson-reader-tabs" role="tablist" aria-label="Lesson days">
             {pages.map((page, index) => (
               <button
                 key={page.id}
+                role="tab"
+                aria-selected={index === currentPage}
                 className={`lesson-reader-tab ${index === currentPage ? 'active' : ''}`}
                 onClick={() => setCurrentPage(index)}
               >
@@ -181,12 +259,8 @@ export default function LessonReader({ lesson, isOpen, onClose }) {
             ))}
           </div>
           <div className="lesson-reader-nav">
-            <button onClick={prevPage} disabled={currentPage === 0}>
-              <ArrowLeft size={20} />
-            </button>
-            <button onClick={nextPage} disabled={currentPage === pages.length - 1}>
-              <ArrowRight size={20} />
-            </button>
+            <button onClick={prevPage} disabled={currentPage === 0} aria-label="Previous page"><ArrowLeft size={20} /></button>
+            <button onClick={nextPage} disabled={currentPage === pages.length - 1} aria-label="Next page"><ArrowRight size={20} /></button>
           </div>
         </footer>
       </div>

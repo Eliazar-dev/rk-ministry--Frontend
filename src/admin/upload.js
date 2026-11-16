@@ -43,9 +43,9 @@ export async function shrinkImage(file, max = 1600, quality = 0.85) {
 }
 
 /** Resolves with the file's secure_url. `signal` cancels the upload. */
-export async function uploadToCloudinary(file, { type = 'image', folder = 'covers', onProgress, signal } = {}) {
+export async function uploadToCloudinary(file, { type = 'image', folder = 'covers', onProgress, signal, maxWidth } = {}) {
   const sign = await http('/manage/upload-sign/', { method: 'POST', body: { folder, type }, signal });
-  const body = type === 'image' ? await shrinkImage(file) : file;
+  const body = type === 'image' ? await shrinkImage(file, maxWidth || 1600) : file;
   const fd = new FormData();
   fd.append('file', body);
   fd.append('api_key', sign.api_key);

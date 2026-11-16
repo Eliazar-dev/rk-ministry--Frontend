@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Calendar, Check, Download, ExternalLink, Heart, Lock, MapPin, Play, PlayCircle, ShoppingCart } from 'lucide-react';
-import { fmtDate, money } from '../api/client';
+import { cloudinaryDownload, fmtDate, money, slugify } from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { useGate } from '../context/GateContext';
@@ -39,8 +39,10 @@ export function LessonCard({ item, onWatch, onViewLesson }) {
   const { guard } = useGate();
   const download = () =>
     guard({ type: 'pdf', id: item.id }, () => {
+      const fname = `${slugify(item.title)}.pdf`;
+      const url = cloudinaryDownload(item.pdf, fname.replace(/\.pdf$/, ''));
       // Fetch as blob and trigger download (works for all URLs including Cloudinary)
-      fetch(item.pdf)
+      fetch(url)
         .then(res => {
           if (!res.ok) throw new Error('Failed to download PDF');
           return res.blob();
@@ -48,7 +50,7 @@ export function LessonCard({ item, onWatch, onViewLesson }) {
         .then(blob => {
           const a = document.createElement('a');
           a.href = URL.createObjectURL(blob);
-          a.download = item.pdf.split('/').pop() || 'lesson.pdf';
+          a.download = fname;
           document.body.appendChild(a);
           a.click();
           document.body.removeChild(a);
@@ -57,7 +59,7 @@ export function LessonCard({ item, onWatch, onViewLesson }) {
         .catch((err) => {
           console.error('PDF download error:', err);
           // Fallback: open in new tab
-          window.open(item.pdf, '_blank', 'noopener,noreferrer');
+          window.open(url, '_blank', 'noopener,noreferrer');
         });
     });
   return (
@@ -72,12 +74,12 @@ export function LessonCard({ item, onWatch, onViewLesson }) {
         <div className="meta"><span>{item.dateRange}</span><span>{item.teacher}</span></div>
         <div className="card-actions lesson-actions">
           {item.hasVideo && (
-            <button className="btn btn-navy" onClick={() => guard({ type: 'lesson', id: item.id }, () => onWatch(item))}>
+            <button className="btn btn-navy" onClick={() => guard({ type: 'lesson', id: item.id }, () => onWatch?.(item))}>
               <PlayCircle size={15} /> Watch Video
             </button>
           )}
           {item.hasPages && (
-            <button className="btn btn-navy" onClick={() => guard({ type: 'lesson', id: item.id }, () => onViewLesson(item))}>
+            <button className="btn btn-navy" onClick={() => guard({ type: 'lesson-pages', id: item.id }, () => onViewLesson?.(item))}>
               <Play size={15} /> View Lesson
             </button>
           )}

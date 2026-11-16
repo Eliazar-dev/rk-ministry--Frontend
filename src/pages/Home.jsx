@@ -6,6 +6,7 @@ import SectionHeader from '../components/SectionHeader';
 import { SkeletonGrid } from '../components/Skeleton';
 import { AlbumCard, LessonCard, ProductCard, VideoCard } from '../components/Cards';
 import VideoModal from '../components/VideoModal';
+import LessonReader from '../components/LessonReader';
 import PrayerForm from '../components/PrayerForm';
 import { useList } from '../api/client';
 import { useAuth } from '../context/AuthContext';
@@ -23,11 +24,18 @@ export default function Home() {
   const gallery = useList('gallery');
   const products = useList('products');
   const [playing, setPlaying] = useState(null); // { item, kind }
+  const [viewingLesson, setViewingLesson] = useState(null);
 
   const openSermon = useCallback((item) => setPlaying({ item, kind: 'sermon' }), []);
   const openLesson = useCallback((item) => setPlaying({ item, kind: 'lesson' }), []);
+  const viewLesson = useCallback((item) => setViewingLesson(item), []);
+  const watchFromReader = useCallback((item) => {
+    setViewingLesson(null);
+    setPlaying({ item, kind: 'lesson' });
+  }, []);
   useResume('sermon', sermons.data, openSermon);
   useResume('lesson', lessons.data, openLesson);
+  useResume('lesson-pages', lessons.data, viewLesson);
 
   return (
     <>
@@ -50,7 +58,7 @@ export default function Home() {
           {lessons.loading ? (
             <SkeletonGrid count={6} />
           ) : (
-            <div className="grid">{lessons.data.slice(0, 6).map((l) => <LessonCard key={l.id} item={l} onWatch={openLesson} />)}</div>
+            <div className="grid">{lessons.data.slice(0, 6).map((l) => <LessonCard key={l.id} item={l} onWatch={openLesson} onViewLesson={viewLesson} />)}</div>
           )}
         </div>
       </section>
@@ -103,6 +111,7 @@ export default function Home() {
       )}
 
       {playing && <VideoModal item={playing.item} kind={playing.kind} onClose={() => setPlaying(null)} />}
+      {viewingLesson && <LessonReader lesson={viewingLesson} isOpen={!!viewingLesson} onClose={() => setViewingLesson(null)} onWatchVideo={watchFromReader} />}
     </>
   );
 }

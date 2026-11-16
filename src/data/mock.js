@@ -25,13 +25,21 @@ export const sermons = [
   { id: 6, title: 'Called to Serve', speaker: 'Richard Kwanya Snr', date: '2026-09-20', cover: img('sermon6'), youtube: 'https://www.youtube.com/watch?v=aqz-KE-bpKQ', likes: 65, category: 'Service' },
 ];
 
+const lessonPages = (n) =>
+  ['Friday', 'Saturday', 'Sabbath'].map((d, i) => ({
+    id: n * 10 + i,
+    url: `https://picsum.photos/seed/lesson${n}p${i}/900/1200`,
+    label: `${d}, Week ${n}`,
+    alt: `${d} lesson page`,
+  }));
+
 export const lessons = [
-  { id: 1, title: 'Lesson 6: Faith That Works', quarter: 'Q4 2026', dateRange: 'Nov 1 – Nov 7', cover: img('lesson1'), pdf: '#', youtube: 'https://www.youtube.com/watch?v=aqz-KE-bpKQ', teacher: 'Richard Kwanya Snr', category: 'Q4 2026' },
-  { id: 2, title: 'Lesson 5: Living by Grace', quarter: 'Q4 2026', dateRange: 'Oct 25 – Oct 31', cover: img('lesson2'), pdf: '#', youtube: 'https://www.youtube.com/watch?v=aqz-KE-bpKQ', teacher: 'Richard Kwanya Snr', category: 'Q4 2026' },
-  { id: 3, title: 'Lesson 4: The Great Controversy', quarter: 'Q4 2026', dateRange: 'Oct 18 – Oct 24', cover: img('lesson3'), pdf: '#', youtube: 'https://www.youtube.com/watch?v=aqz-KE-bpKQ', teacher: 'Richard Kwanya Snr', category: 'Q4 2026' },
-  { id: 4, title: 'Lesson 3: Rest in Christ', quarter: 'Q4 2026', dateRange: 'Oct 11 – Oct 17', cover: img('lesson4'), pdf: '#', youtube: 'https://www.youtube.com/watch?v=aqz-KE-bpKQ', teacher: 'Richard Kwanya Snr', category: 'Q4 2026' },
-  { id: 5, title: 'Lesson 2: The Call to Obedience', quarter: 'Q4 2026', dateRange: 'Oct 4 – Oct 10', cover: img('lesson5'), pdf: '#', youtube: 'https://www.youtube.com/watch?v=aqz-KE-bpKQ', teacher: 'Richard Kwanya Snr', category: 'Q4 2026' },
-  { id: 6, title: 'Lesson 1: Foundations', quarter: 'Q4 2026', dateRange: 'Sep 27 – Oct 3', cover: img('lesson6'), pdf: '#', youtube: 'https://www.youtube.com/watch?v=aqz-KE-bpKQ', teacher: 'Richard Kwanya Snr', category: 'Q3 2026' },
+  { id: 1, title: 'Lesson 6: Faith That Works', quarter: 'Q4 2026', dateRange: 'Nov 1 – Nov 7', cover: img('lesson1'), pdf: '#', youtube: 'https://www.youtube.com/watch?v=aqz-KE-bpKQ', teacher: 'Richard Kwanya Snr', category: 'Q4 2026', hasVideo: true, hasPdf: true, hasPages: true, pages: lessonPages(1) },
+  { id: 2, title: 'Lesson 5: Living by Grace', quarter: 'Q4 2026', dateRange: 'Oct 25 – Oct 31', cover: img('lesson2'), pdf: '#', youtube: 'https://www.youtube.com/watch?v=aqz-KE-bpKQ', teacher: 'Richard Kwanya Snr', category: 'Q4 2026', hasVideo: true, hasPdf: true, hasPages: true, pages: lessonPages(2) },
+  { id: 3, title: 'Lesson 4: The Great Controversy', quarter: 'Q4 2026', dateRange: 'Oct 18 – Oct 24', cover: img('lesson3'), pdf: '#', youtube: 'https://www.youtube.com/watch?v=aqz-KE-bpKQ', teacher: 'Richard Kwanya Snr', category: 'Q4 2026', hasVideo: true, hasPdf: false, hasPages: false, pages: [] },
+  { id: 4, title: 'Lesson 3: Rest in Christ', quarter: 'Q4 2026', dateRange: 'Oct 11 – Oct 17', cover: img('lesson4'), pdf: '#', youtube: 'https://www.youtube.com/watch?v=aqz-KE-bpKQ', teacher: 'Richard Kwanya Snr', category: 'Q4 2026', hasVideo: true, hasPdf: true, hasPages: true, pages: lessonPages(4) },
+  { id: 5, title: 'Lesson 2: The Call to Obedience', quarter: 'Q4 2026', dateRange: 'Oct 4 – Oct 10', cover: img('lesson5'), pdf: '#', youtube: 'https://www.youtube.com/watch?v=aqz-KE-bpKQ', teacher: 'Richard Kwanya Snr', category: 'Q4 2026', hasVideo: true, hasPdf: true, hasPages: false, pages: [] },
+  { id: 6, title: 'Lesson 1: Foundations', quarter: 'Q4 2026', dateRange: 'Sep 27 – Oct 3', cover: img('lesson6'), pdf: '#', youtube: 'https://www.youtube.com/watch?v=aqz-KE-bpKQ', teacher: 'Richard Kwanya Snr', category: 'Q3 2026', hasVideo: true, hasPdf: true, hasPages: true, pages: lessonPages(6) },
 ];
 
 export const devotionals = [

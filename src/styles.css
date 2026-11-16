@@ -1356,18 +1356,48 @@ button.card { text-align: left; width: 100%; }
   overflow: auto;
   background: #0a0a0a;
   cursor: pointer;
+  touch-action: pan-x pan-y; /* lets the reader handle swipe + pinch itself */
+}
+
+.lesson-reader-imgwrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.lesson-reader-skel {
+  position: absolute;
+  inset: 0;
+  min-width: 60vw;
+  min-height: 60vh;
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 8px;
+  background: linear-gradient(100deg, #141824 40%, #1d2438 50%, #141824 60%);
+  background-size: 200% 100%;
+  animation: readerShimmer 1.4s ease-in-out infinite;
+}
+
+@keyframes readerShimmer {
+  from { background-position: 120% 0; }
+  to { background-position: -120% 0; }
 }
 
 .lesson-reader-main img {
+  display: block;
   max-width: 100%;
-  max-height: 100%;
+  max-height: calc(90vh - 140px);
   object-fit: contain;
   border-radius: 8px;
-  transition: transform 0.3s ease;
+  transform-origin: center center;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
-.lesson-reader-main.zoomed img {
-  transform: scale(1.5);
+.lesson-reader-main.zoomed {
   cursor: zoom-out;
 }
 

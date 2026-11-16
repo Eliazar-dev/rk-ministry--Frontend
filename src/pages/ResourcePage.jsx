@@ -31,7 +31,12 @@ function Inner({ slug, cfg }) {
   const kind = cfg.kind === 'video' ? 'sermon' : 'lesson';
   const open = useCallback((item) => setPlaying(item), []);
   const viewLesson = useCallback((item) => setViewingLesson(item), []);
+  const watchFromReader = useCallback((item) => {
+    setViewingLesson(null);
+    setPlaying(item);
+  }, []);
   useResume(kind, cfg.kind === 'video' || cfg.kind === 'lesson' ? data : [], open);
+  useResume('lesson-pages', cfg.kind === 'lesson' ? data : [], viewLesson);
 
   // albums are grouped by year, everything else by category
   const field = cfg.kind === 'gallery' ? 'year' : 'category';
@@ -95,7 +100,7 @@ function Inner({ slug, cfg }) {
       </section>
 
       {playing && <VideoModal item={playing} kind={kind} onClose={() => setPlaying(null)} />}
-      {viewingLesson && <LessonReader lesson={viewingLesson} isOpen={!!viewingLesson} onClose={() => setViewingLesson(null)} />}
+      {viewingLesson && <LessonReader lesson={viewingLesson} isOpen={!!viewingLesson} onClose={() => setViewingLesson(null)} onWatchVideo={watchFromReader} />}
     </>
   );
 }
