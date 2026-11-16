@@ -1,10 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { ArrowLeft, ArrowRight, FileText, Image as ImageIcon, X } from 'lucide-react';
-import { cloudinaryDownload, slugify } from '../api/client';
+import { slugify } from '../api/client';
 import { useGate } from '../context/GateContext';
 import { useToast } from '../context/ToastContext';
 
-const isIOS = () => /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 const clamp = (n, lo, hi) => Math.min(hi, Math.max(lo, n));
 
 /** Cloudinary images get f_auto,q_auto,w_1600 for quick display; everything else loads as-is. */
@@ -123,54 +122,41 @@ export default function LessonReader({ lesson, isOpen, onClose, onWatchVideo }) 
 
   const toggleZoom = () => setScale((s) => (s > 1 ? 1 : 2));
 
-  /** Real file download: fl_attachment URL first, blob fallback, then "press and hold". */
+  /** Real file download: fetch the file as a blob and save it under `fname`.
+   *  Avoids Cloudinary fl_attachment, which the account does not allow. */
   const saveFile = async (url, fname) => {
-    const isAttachment = url.includes('/upload/fl_attachment:');
-    // iOS Safari ignores download attributes — fetch and save the blob ourselves.
-    if (isIOS() || !isAttachment) {
+    try {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error('fetch failed');
+      const blob = await res.blob();
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = fname;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+      return;
+    } catch {
       try {
-        const res = await fetch(url);
-        if (!res.ok) throw new Error('fetch failed');
-        const blob = await res.blob();
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = fname;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(a.href);
+        window.open(url, '_blank', 'noopener,noreferrer');
         return;
       } catch {
-        try {
-          window.open(url, '_blank', 'noopener,noreferrer');
-          return;
-        } catch {
-          toast('Press and hold the file to save it.');
-        }
+        toast('Press and hold the file to save it.');
       }
-      return;
     }
-    // Desktop: fl_attachment makes Cloudinary send Content-Disposition: attachment → real download.
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = fname;
-    a.rel = 'noopener';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
   };
 
   const downloadImage = () => {
     const page = pages[currentPage];
     if (!page?.url) return;
     const labelSlug = slugify(page.label || `page-${currentPage + 1}`);
-    saveFile(cloudinaryDownload(page.url, `${lessonSlug}-${labelSlug}`), `${lessonSlug}-${labelSlug}.jpg`);
+    saveFile(page.url, `${lessonSlug}-${labelSlug}.jpg`);
   };
 
   const downloadPdf = () => {
     if (!lesson?.pdf) return;
-    const fname = `${lessonSlug}.pdf`;
-    saveFile(cloudinaryDownload(lesson.pdf, lessonSlug), fname);
+    saveFile(lesson.pdf, `${lessonSlug}.pdf`);
   };
 
   if (!isOpen || !lesson) return null;

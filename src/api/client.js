@@ -18,10 +18,6 @@ export const money = (n) => `KES ${Number(n).toLocaleString()}`;
 export const slugify = (s = '') =>
   String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'file';
 
-/** Insert a Cloudinary fl_attachment (forces a real download with a clean filename) after /upload/. */
-export const cloudinaryDownload = (url = '', name = 'download') =>
-  url.includes('/upload/') ? url.replace('/upload/', `/upload/fl_attachment:${name}/`) : url;
-
 /** Fetch a resource. Uses Django when VITE_API_URL is set, otherwise demo data. */
 export async function list(resource) {
   if (hasApi) return http(`/${resource}/`);

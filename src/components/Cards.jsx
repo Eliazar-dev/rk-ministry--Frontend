@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Calendar, Check, Download, ExternalLink, Heart, Lock, MapPin, Play, PlayCircle, ShoppingCart } from 'lucide-react';
-import { cloudinaryDownload, fmtDate, money, slugify } from '../api/client';
+import { fmtDate, money, slugify } from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { useGate } from '../context/GateContext';
@@ -40,9 +40,9 @@ export function LessonCard({ item, onWatch, onViewLesson }) {
   const download = () =>
     guard({ type: 'pdf', id: item.id }, () => {
       const fname = `${slugify(item.title)}.pdf`;
-      const url = cloudinaryDownload(item.pdf, fname.replace(/\.pdf$/, ''));
-      // Fetch as blob and trigger download (works for all URLs including Cloudinary)
-      fetch(url)
+      // Fetch the original file as a blob and save it — avoids Cloudinary fl_attachment,
+      // which this account does not allow.
+      fetch(item.pdf)
         .then(res => {
           if (!res.ok) throw new Error('Failed to download PDF');
           return res.blob();
@@ -59,7 +59,7 @@ export function LessonCard({ item, onWatch, onViewLesson }) {
         .catch((err) => {
           console.error('PDF download error:', err);
           // Fallback: open in new tab
-          window.open(url, '_blank', 'noopener,noreferrer');
+          window.open(item.pdf, '_blank', 'noopener,noreferrer');
         });
     });
   return (
