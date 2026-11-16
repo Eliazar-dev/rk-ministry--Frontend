@@ -74,7 +74,7 @@ export default function Home() {
       <section className="verse">
         <div className="container">
           <Quote size={34} />
-          <blockquote>Nurturing Hearts, Developing Minds, Transforming Lives</blockquote>
+          <blockquote>Equipping people, transforming lives. Impacting Generations for Christ</blockquote>
         </div>
       </section>
 

@@ -95,10 +95,8 @@ export default function HeroCarousel() {
         <div className="hero-content">
           <div className="hero-kicker">Richard Kwanya Snr · #Babawa</div>
           <h1>
-            Equipping people,<br />
-            Nurturing Hearts,<br />
-            Developing Minds,<br />
-            <em>transforming lives</em>
+            Equipping people, transforming lives.<br />
+            <em>Impacting Generations for Christ</em>
           </h1>
           <p>Join a growing family spreading the gospel through the Word, worship, mission and service.</p>
           <div className="hero-cta">

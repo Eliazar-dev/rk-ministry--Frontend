@@ -38,7 +38,7 @@ export default function About() {
                 <h3>{p.name || 'Richard Kwanya Snr'}</h3>
                 {p.title && <div className="pastor-role">{p.title}</div>}
                 {p.intro && <p className="pastor-intro">{p.intro}</p>}
-                <blockquote className="pastor-quote"><Quote size={22} />Nurturing Hearts, Developing Minds, Transforming Lives</blockquote>
+                <blockquote className="pastor-quote"><Quote size={22} />{p.quote || 'Equipping people, transforming lives. Impacting Generations for Christ'}</blockquote>
                 {paras.map((t, i) => <p key={i}>{t}</p>)}
                 {empty && <p>Biography coming soon.</p>}
               </div>
@@ -66,7 +66,7 @@ export default function About() {
         <div className="container">
           <div className="sec-head"><h2>Motto / Tagline</h2></div>
           <p style={{ fontSize: '1.25rem', fontWeight: 600, color: '#d4af37', textAlign: 'center', marginTop: 20 }}>
-            Nurturing Hearts, Developing Minds, Transforming Lives
+            {p.quote || 'Equipping people, transforming lives. Impacting Generations for Christ'}
           </p>
         </div>
       </section>
