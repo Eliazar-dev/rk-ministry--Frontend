@@ -41,7 +41,7 @@ export const RESOURCES = {
       T('date_range', 'Dates', { required: true, placeholder: 'Nov 1 – Nov 7' }),
       { name: 'start_date', label: 'Start date (for ordering)', type: 'date', required: true },
       T('teacher', 'Teacher', { default: 'Richard Kwanya Snr' }),
-      { name: 'youtube_url', label: 'YouTube lesson video', type: 'youtube', required: true },
+      { name: 'youtube_url', label: 'YouTube lesson video', type: 'youtube', help: 'Optional — lessons can have pages and/or a PDF instead.' },
       { name: 'pdf_url', label: 'Lesson PDF', type: 'raw', srcKey: 'pdf_src', folder: 'pdfs', help: 'Upload a PDF (up to 40 MB) or paste a link.' },
       IMG('cover_url', 'Cover image', 'cover_src'),
       { name: 'description', label: 'Description', type: 'textarea', rows: 3 },
