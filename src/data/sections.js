@@ -9,4 +9,5 @@ export const SECTIONS = {
   'children-bible-stories': { title: 'Children Bible Stories', sub: 'Colourful stories that plant seeds of faith.', resource: 'children', kind: 'article' },
   ebooks: { title: 'E-Books', sub: 'Free downloadable books for study and mission.', resource: 'ebooks', kind: 'article', pdf: true },
   'mission-gallery': { title: 'Mission Gallery', sub: 'Albums from crusades, baptisms and outreach. Tap an album to see all the photos.', resource: 'gallery', kind: 'gallery' },
+  'youth-ministries': { title: 'Youth Ministries', sub: 'Videos and articles for the next generation.', resource: 'youth', kind: 'article' },
 };

@@ -23,6 +23,7 @@ export const sermons = [
   { id: 4, title: 'Prayer That Moves Mountains', speaker: 'Richard Kwanya Snr', date: '2026-10-04', cover: img('sermon4'), youtube: 'https://www.youtube.com/watch?v=aqz-KE-bpKQ', likes: 76, category: 'Prayer' },
   { id: 5, title: 'Grace That Restores', speaker: 'Richard Kwanya Snr', date: '2026-09-27', cover: img('sermon5'), youtube: 'https://www.youtube.com/watch?v=aqz-KE-bpKQ', likes: 88, category: 'Grace' },
   { id: 6, title: 'Called to Serve', speaker: 'Richard Kwanya Snr', date: '2026-09-20', cover: img('sermon6'), youtube: 'https://www.youtube.com/watch?v=aqz-KE-bpKQ', likes: 65, category: 'Service' },
+  { id: 7, title: 'Young and Called', speaker: 'Richard Kwanya Snr', date: '2026-09-13', cover: img('sermon7'), youtube: 'https://www.youtube.com/watch?v=aqz-KE-bpKQ', likes: 54, category: 'Youth' },
 ];
 
 const lessonPages = (n) =>
@@ -98,6 +99,15 @@ export const children = articles('kids', [
   ['Jonah and the Big Fish', 'Old Testament', 'You cannot run from God’s love.'],
 ], 'Children’s Ministry');
 
+export const youth = articles('youth', [
+  ['Young and Called: Your Purpose in Christ', 'Identity', 'You are not too young for God to use you — here is how He calls students and youth.'],
+  ['Balancing School, Friends and Faith', 'Student Life', 'Practical habits for staying rooted in Christ on campus and beyond.'],
+  ['The Youth Bible Challenge', 'Study', 'How the challenge is forming a generation of Bible readers across Kenya.'],
+  ['Evangelism on Campus', 'Mission', 'Sharing the gospel respectfully and boldly in schools and hostels.'],
+  ['Stories That Changed Young Lives', 'Testimonies', 'Real youth testifying to what God did in their families and schools.'],
+  ['Youth Rally Recap', 'Events', 'Highlights from the latest youth rally — worship, worship and more worship.'],
+], 'Youth Ministries');
+
 export const ebooks = articles('ebook', [
   ['Steps to Christ Study Companion', 'Devotional', 'A guided companion for personal study.'],
   ['The Evangelist’s Handbook', 'Mission', 'A practical manual for public evangelism.'],
@@ -146,6 +156,7 @@ export const resources = {
   literature,
   medical,
   children,
+  youth,
   ebooks,
   gallery,
   products,

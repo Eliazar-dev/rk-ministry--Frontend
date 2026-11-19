@@ -21,6 +21,7 @@ const staticPaths = [
   '/resources/children-bible-stories',
   '/resources/ebooks',
   '/resources/mission-gallery',
+  '/resources/youth-ministries',
 ];
 
 const day = new Date().toISOString().slice(0, 10);
@@ -41,12 +42,13 @@ async function generateSitemap() {
   let paths = [...staticPaths];
 
   // Fetch dynamic content from API
-  const [sermons, devotionals, articles, lessons, gallery] = await Promise.all([
+  const [sermons, devotionals, articles, lessons, gallery, youth] = await Promise.all([
     fetchAPIItems('/sermons/'),
     fetchAPIItems('/devotionals/'),
     fetchAPIItems('/blogs/'),
     fetchAPIItems('/lessons/'),
     fetchAPIItems('/gallery/'),
+    fetchAPIItems('/youth/'),
   ]);
 
   // Add sermon detail pages
@@ -62,6 +64,8 @@ async function generateSitemap() {
   lessons.forEach(l => paths.push(`/resources/sabbath-school/${l.id}`));
   // Add gallery detail pages
   gallery.forEach(g => paths.push(`/resources/mission-gallery/${g.id}`));
+  // Add youth article detail pages
+  youth.forEach(a => paths.push(`/resources/youth-ministries/${a.id}`));
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${paths
     .map((p) => `  <url><loc>${SITE_URL}${p}</loc><lastmod>${day}</lastmod></url>`)

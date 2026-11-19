@@ -15,6 +15,7 @@ import Contact from './pages/Contact';
 import Live from './pages/Live';
 import Profile from './pages/Profile';
 import About from './pages/About';
+import Youth from './pages/Youth';
 import AdminLogin from './pages/AdminLogin';
 
 // The admin panel is its own chunk, so visitors never download it
@@ -45,6 +46,7 @@ export default function App() {
       />
       <Route element={<Layout />}>
         <Route path="/" element={<Home />} />
+        <Route path="/resources/youth-ministries" element={<Youth />} />
         <Route path="/resources/:slug" element={<ResourcePage />} />
         <Route path="/resources/:slug/:id" element={<Reader />} />
         <Route path="/gallery" element={<Navigate to="/resources/mission-gallery" replace />} />

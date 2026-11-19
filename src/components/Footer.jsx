@@ -19,6 +19,7 @@ export default function Footer() {
             <li><Link to="/">Home</Link></li>
             <li><Link to="/resources/sermons">Sermons</Link></li>
             <li><Link to="/resources/sabbath-school">Sabbath School</Link></li>
+            <li><Link to="/resources/youth-ministries">Youth Ministries</Link></li>
             <li><Link to="/store">Store</Link></li>
           </ul>
         </div>

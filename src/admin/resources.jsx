@@ -26,7 +26,7 @@ export const RESOURCES = {
       { name: 'youtube_url', label: 'YouTube link', type: 'youtube', required: true, placeholder: 'https://youtu.be/…' },
       T('speaker', 'Speaker', { default: 'Richard Kwanya Snr' }),
       { name: 'date', label: 'Date', type: 'date', required: true },
-      T('category', 'Category', { placeholder: 'Faith, Prayer, Hope…' }),
+      T('category', 'Category', { placeholder: 'Faith, Prayer, Youth… (use "Youth" to show on the Youth Ministries page)' }),
       IMG('cover_url', 'Cover image', 'cover_src'),
       { name: 'description', label: 'Description', type: 'textarea', rows: 3 },
       { name: 'published', label: 'Show on the website', type: 'bool', default: true },
@@ -66,10 +66,10 @@ export const RESOURCES = {
   },
   articles: {
     label: 'Articles', one: 'article', endpoint: 'articles', thumb: 'cover_src', toggles: [['published', 'Shown']],
-    sections: [['', 'All'], ['blog', 'Blogs'], ['literature', 'Literature'], ['medical', 'Medical'], ['children', 'Children'], ['ebook', 'E-books']],
+    sections: [['', 'All'], ['blog', 'Blogs'], ['literature', 'Literature'], ['medical', 'Medical'], ['children', 'Children'], ['ebook', 'E-books'], ['youth', 'Youth']],
     columns: [{ key: 'title', label: 'Title', bold: true }, { key: 'section', label: 'Section', type: 'badge' }, { key: 'author', label: 'Author' }, { key: 'date', label: 'Date', type: 'date' }],
     fields: [
-      { name: 'section', label: 'Section', type: 'select', required: true, default: 'blog', options: [['blog', 'Blog'], ['literature', 'Literature Evangelism'], ['medical', 'Medical Missionary'], ['children', 'Children Bible Story'], ['ebook', 'E-Book']] },
+      { name: 'section', label: 'Section', type: 'select', required: true, default: 'blog', options: [['blog', 'Blog'], ['literature', 'Literature Evangelism'], ['medical', 'Medical Missionary'], ['children', 'Children Bible Story'], ['ebook', 'E-Book'], ['youth', 'Youth Ministries']] },
       T('title', 'Title', { required: true }),
       T('author', 'Author', { default: 'Richard Kwanya Snr' }),
       { name: 'date', label: 'Date', type: 'date', required: true },

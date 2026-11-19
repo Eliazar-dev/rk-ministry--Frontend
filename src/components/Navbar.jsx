@@ -10,6 +10,7 @@ export const RESOURCE_LINKS = [
   ['Devotionals', '/resources/devotionals'],
   ['Sabbath School Video Lessons', '/resources/sabbath-school'],
   ['Sermon Videos', '/resources/sermons'],
+  ['Youth Ministries', '/resources/youth-ministries'],
   ['Literature Evangelism', '/resources/literature'],
   ['Store / Shop', '/store'],
   ['Blogs', '/resources/blogs'],
