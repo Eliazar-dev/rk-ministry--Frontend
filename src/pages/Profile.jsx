@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, LogOut, Upload, X } from 'lucide-react';
+import { LayoutDashboard, LogOut, Lock, Upload, X } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { http } from '../api/http';
 import { useState } from 'react';
@@ -9,6 +9,32 @@ export default function Profile() {
   const navigate = useNavigate();
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
+  const [pw, setPw] = useState({ current: '', password: '', confirm: '' });
+  const [pwMsg, setPwMsg] = useState('');
+  const [pwErr, setPwErr] = useState('');
+  const [pwBusy, setPwBusy] = useState(false);
+
+  const savePassword = async (e) => {
+    e.preventDefault();
+    setPwErr('');
+    setPwMsg('');
+    if (pw.password.length < 6) return setPwErr('Password must be at least 6 characters.');
+    if (pw.password !== pw.confirm) return setPwErr('The two passwords do not match.');
+    setPwBusy(true);
+    try {
+      await http('/auth/password/', {
+        method: 'POST',
+        body: { password: pw.password, current_password: pw.current || undefined },
+      });
+      setPwMsg('Password saved. You can now sign in with it too.');
+      setPw({ current: '', password: '', confirm: '' });
+      setTimeout(() => window.location.reload(), 1200);
+    } catch (ex) {
+      setPwErr(ex.message);
+    } finally {
+      setPwBusy(false);
+    }
+  };
 
   const handleFileUpload = async (e) => {
     const file = e.target.files[0];
@@ -107,6 +133,25 @@ export default function Profile() {
                 )}
               </div>
               {error && <p style={{ color: '#dc2626', fontSize: '0.875rem', marginTop: 4 }}>{error}</p>}
+            </div>
+
+            <div className="field">
+              <label><Lock size={14} style={{ verticalAlign: -2, marginRight: 4 }} />Password</label>
+              {user.has_password === false && (
+                <p style={{ fontSize: '0.85rem', color: '#8fa3c8', margin: '0 0 8px' }}>You sign in with email codes — set a password if you prefer.</p>
+              )}
+              <form onSubmit={savePassword} style={{ display: 'grid', gap: 8 }}>
+                {user.has_password && (
+                  <input type="password" placeholder="Current password" autoComplete="current-password" value={pw.current} onChange={(e) => setPw({ ...pw, current: e.target.value })} required />
+                )}
+                <input type="password" placeholder={user.has_password ? 'New password' : 'Choose a password'} autoComplete="new-password" value={pw.password} onChange={(e) => setPw({ ...pw, password: e.target.value })} required minLength={6} />
+                <input type="password" placeholder="Confirm password" autoComplete="new-password" value={pw.confirm} onChange={(e) => setPw({ ...pw, confirm: e.target.value })} required minLength={6} />
+                {pwErr && <p style={{ color: '#dc2626', fontSize: '0.85rem', margin: 0 }}>{pwErr}</p>}
+                {pwMsg && <p style={{ color: '#16a34a', fontSize: '0.85rem', margin: 0 }}>{pwMsg}</p>}
+                <button className="btn btn-navy" type="submit" disabled={pwBusy} style={{ justifySelf: 'start' }}>
+                  {pwBusy ? 'Saving…' : user.has_password ? 'Change password' : 'Set password'}
+                </button>
+              </form>
             </div>
 
             {user.is_staff && (

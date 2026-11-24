@@ -64,7 +64,7 @@ export default function Auth() {
 
   const onSignup = (e) => {
     e.preventDefault();
-    if (sf.password.length < 6) return setErr('Password must be at least 6 characters.');
+    if (sf.password && sf.password.length < 6) return setErr('Password must be at least 6 characters.');
     guard(async () => {
       await signup(sf); // emails the code
       hold.current = false;
@@ -174,9 +174,10 @@ export default function Auth() {
                   </div>
                   <div className="g-field">
                     <Lock size={20} />
-                    <input type={pwType} required placeholder="Password" autoComplete="new-password" value={sf.password} onChange={(e) => setSf({ ...sf, password: e.target.value })} />
+                    <input type={pwType} placeholder="Password (optional)" autoComplete="new-password" value={sf.password} onChange={(e) => setSf({ ...sf, password: e.target.value })} />
                     <button type="button" className="eye" onClick={() => setShow(!show)} aria-label="Toggle password"><Eye_ size={18} /></button>
                   </div>
+                  <p style={{ fontSize: '0.8rem', color: '#8fa3c8', margin: '-6px 0 10px' }}>Leave blank to sign in with email codes only — you can add one later.</p>
                   <button className="g-btn" disabled={busy}>{busy && flip ? 'SENDING CODE…' : 'SIGN UP'}</button>
                   {googleBlock}
                   <div className="switch">Already a member?<button type="button" onClick={toggle}>Login</button></div>
