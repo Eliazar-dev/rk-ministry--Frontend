@@ -3,6 +3,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import WhatsAppBubble from './WhatsAppBubble';
+import NewsletterPopup from './NewsletterPopup';
 
 /** Shell for every page. The home page brings its own Navbar (inside the hero). */
 export default function Layout() {
@@ -25,6 +26,7 @@ export default function Layout() {
       </main>
       <Footer />
       <WhatsAppBubble />
+      <NewsletterPopup />
     </>
   );
 }
