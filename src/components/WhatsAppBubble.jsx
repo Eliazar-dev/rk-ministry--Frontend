@@ -1,5 +1,5 @@
 export default function WhatsAppBubble() {
-  const number = import.meta.env.VITE_WHATSAPP_NUMBER || '254700000000';
+  const number = import.meta.env.VITE_WHATSAPP_NUMBER || '254743346573';
   const text = encodeURIComponent('Hello Richard Kwanya Snr Ministry, I would like to know more.');
   return (
     <a className="wa" href={`https://wa.me/${number}?text=${text}`} target="_blank" rel="noreferrer" aria-label="Chat on WhatsApp">
