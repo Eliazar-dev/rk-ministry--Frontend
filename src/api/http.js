@@ -1,6 +1,7 @@
 // Tiny fetch wrapper for the Django API: JWT header, silent token refresh, readable errors.
 const API = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
 export const hasApi = Boolean(API);
+export const API_URL = API;
 
 const KEY = 'rk_tokens';
 export const tokens = {

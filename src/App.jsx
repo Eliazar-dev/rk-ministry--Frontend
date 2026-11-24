@@ -17,6 +17,7 @@ import Profile from './pages/Profile';
 import About from './pages/About';
 import Youth from './pages/Youth';
 import AdminLogin from './pages/AdminLogin';
+import NewsletterUnsubscribe from './pages/NewsletterUnsubscribe';
 
 // The admin panel is its own chunk, so visitors never download it
 const AdminApp = lazy(() => import('./admin/AdminApp'));
@@ -58,6 +59,7 @@ export default function App() {
         <Route path="/live" element={<Live />} />
         <Route path="/profile" element={<Protected><Profile /></Protected>} />
         <Route path="/about" element={<About />} />
+        <Route path="/newsletter/unsubscribe" element={<NewsletterUnsubscribe />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>
