@@ -143,7 +143,7 @@ export const RESOURCES = {
     detail: (r) => [['Name', r.name], ['Email', r.email], ['Joined', fmtDateTime(r.date_joined)], ['Last sign-in', fmtDateTime(r.last_login)]],
   },
   newsletter: {
-    label: 'Newsletter subscribers', one: 'subscriber', endpoint: 'newsletter-subscribers', readOnly: true, toggles: [['active', 'Active']],
+    label: 'Newsletter subscribers', one: 'subscriber', endpoint: 'newsletter-subscribers', readOnly: true,
     columns: [{ key: 'email', label: 'Email', bold: true }, { key: 'name', label: 'Name' }, { key: 'subscribed_at', label: 'Subscribed', type: 'date' }],
     detail: (r) => [['Email', r.email], ['Name', r.name || '—'], ['Subscribed', fmtDateTime(r.subscribed_at)], r.unsubscribed_at && ['Unsubscribed', fmtDateTime(r.unsubscribed_at)]].filter(Boolean),
   },
