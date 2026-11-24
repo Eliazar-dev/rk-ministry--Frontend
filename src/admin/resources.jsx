@@ -142,11 +142,6 @@ export const RESOURCES = {
     columns: [{ key: 'name', label: 'Name', bold: true }, { key: 'email', label: 'Email' }, { key: 'is_staff', label: 'Role', type: 'role' }, { key: 'date_joined', label: 'Joined', type: 'date' }],
     detail: (r) => [['Name', r.name], ['Email', r.email], ['Joined', fmtDateTime(r.date_joined)], ['Last sign-in', fmtDateTime(r.last_login)]],
   },
-  newsletter: {
-    label: 'Newsletter subscribers', one: 'subscriber', endpoint: 'newsletter-subscribers', readOnly: true,
-    columns: [{ key: 'email', label: 'Email', bold: true }, { key: 'name', label: 'Name' }, { key: 'subscribed_at', label: 'Subscribed', type: 'date' }],
-    detail: (r) => [['Email', r.email], ['Name', r.name || '—'], ['Subscribed', fmtDateTime(r.subscribed_at)], r.unsubscribed_at && ['Unsubscribed', fmtDateTime(r.unsubscribed_at)]].filter(Boolean),
-  },
 };
 
 export const PASTOR = {
@@ -165,7 +160,7 @@ export const NAV = [
   ['Overview', [['', 'Dashboard', 'LayoutDashboard']]],
   ['Content', [['hero', 'Carousel videos', 'Film'], ['live', 'Live stream', 'Radio'], ['sermons', 'Sermons', 'Video'], ['lessons', 'Sabbath lessons', 'BookOpen'], ['devotionals', 'Devotionals', 'Sunrise'], ['articles', 'Articles', 'Newspaper'], ['albums', 'Gallery albums', 'Images'], ['pastor', 'Pastor biography', 'UserRound']]],
   ['Store', [['products', 'Products', 'Package'], ['orders', 'Orders', 'ShoppingBag'], ['donations', 'Donations', 'HeartHandshake']]],
-  ['Community', [['prayers', 'Prayer requests', 'HandHeart'], ['messages', 'Contact messages', 'Mail'], ['comments', 'Comments', 'MessageSquare'], ['members', 'Members', 'Users'], ['newsletter', 'Newsletter', 'MailCheck']]],
+  ['Community', [['prayers', 'Prayer requests', 'HandHeart'], ['messages', 'Contact messages', 'Mail'], ['comments', 'Comments', 'MessageSquare'], ['members', 'Members', 'Users']]],
 ];
 
 export const formatCell = (col, row) => {
