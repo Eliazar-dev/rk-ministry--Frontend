@@ -144,8 +144,7 @@ export const RESOURCES = {
   },
   newsletter: {
     label: 'Newsletter subscribers', one: 'subscriber', endpoint: 'newsletter-subscribers', readOnly: true, noDelete: true,
-    columns: [{ key: 'email', label: 'Email', bold: true }, { key: 'name', label: 'Name' }, { key: 'active', label: 'Status' }],
-    detail: (r) => [['Email', r.email], ['Name', r.name || '—'], ['Status', r.active ? 'Active' : 'Inactive'], ['Subscribed', fmtDateTime(r.subscribed_at)]],
+    columns: [{ key: 'email', label: 'Email', bold: true }, { key: 'name', label: 'Name' }, { key: 'subscribed_at', label: 'Subscribed', type: 'date' }],
   },
 };
 
